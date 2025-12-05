@@ -1,0 +1,177 @@
+/* recherche.css */
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f6f6f6;
+  color: #111;
+}
+
+.search-page {
+  display: flex;
+  gap: 1.5rem;
+  padding: 6rem 2rem 2rem; /* 6rem pour laisser la place au header fixe si tu en as un */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* colonne gauche */
+.filters {
+  width: 230px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  height: fit-content;
+}
+
+.filters h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.filter-block {
+  margin-top: 1rem;
+}
+
+.filter-title {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.filters label {
+  display: block;
+  font-size: .9rem;
+  margin: .35rem 0;
+}
+
+/* contenu */
+.results {
+  flex: 1;
+  min-width: 0;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.results-header h2 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.sort-tabs button {
+  background: #eee;
+  border: none;
+  padding: .4rem .8rem;
+  border-radius: 999px;
+  font-size: .8rem;
+  cursor: pointer;
+}
+
+.sort-tabs button.active {
+  background: #111;
+  color: #fff;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+  gap: 1.2rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+}
+.card-image {
+  width: 100%;
+  padding-top: 60%; /* ratio 16/9 approximatif */
+  position: relative;
+  overflow: hidden;
+  background: #ddd;
+  border-bottom: 1px solid #eee;
+}
+
+.card-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* <= ça découpe proprement */
+  object-position: center;/* <= centre l'image */
+}
+
+
+
+.no-image {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #555;
+  font-size: .85rem;
+}
+
+.card-body {
+  padding: .85rem .9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+
+.card-body h3 {
+  font-size: .9rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.card-body .date {
+  font-size: .75rem;
+  color: #666;
+}
+
+.card-body .price {
+  font-weight: 600;
+  margin-top: .25rem;
+  font-size: .78rem;
+}
+
+.error {
+  background: #ffe2e2;
+  border: 1px solid #ffbcbc;
+  padding: .5rem .75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .search-page {
+    flex-direction: column;
+    padding-top: 5rem;
+  }
+  .filters {
+    width: 100%;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+}
+.card-body .city {
+  font-size: .75rem;
+  color: #444;
+}
+.card-body .price {
+  font-weight: 600;
+  margin-top: .35rem;
+}

@@ -1,0 +1,102 @@
+/* ---------------------------
+   POLITIQUE DE CONFIDENTIALITÉ - STYLE CLAIR + BLOC SOMBRE
+---------------------------- */
+
+/* Fond global */
+body {
+    background-color: #ffffff; /* ✅ fond blanc pour le header */
+    color: #111;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Bloc central noir */
+.politique-wrapper {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: #0f0f0f; /* ✅ bloc noir */
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Titre principal */
+.politique-wrapper h1 {
+    font-size: 2.4em;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Sous-titres */
+.politique-wrapper h2 {
+    color: #ffffff;
+    font-size: 1.4em;
+    margin-top: 40px;
+    border-left: 4px solid #00ff88; /* ✅ vert clair */
+    padding-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.politique-wrapper h2:hover {
+    color: #00ff88;
+    transform: translateX(5px);
+}
+
+/* Paragraphes et listes */
+.politique-wrapper p {
+    line-height: 1.8;
+    color: #dddddd;
+    margin: 15px 0;
+}
+
+.politique-wrapper ul {
+    margin: 10px 0 20px 40px;
+    list-style: disc;
+}
+
+.politique-wrapper li {
+    color: #cccccc;
+    margin-bottom: 8px;
+}
+
+/* Intro */
+.politique-wrapper .intro {
+    text-align: center;
+    font-size: 1.1em;
+    margin-bottom: 40px;
+    color: #cccccc;
+}
+
+/* Liens */
+.politique-wrapper a {
+    color: #00ff88;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.politique-wrapper a:hover {
+    text-decoration: underline;
+}
+
+/* Dernière mise à jour */
+.politique-wrapper .last-update {
+    text-align: right;
+    font-style: italic;
+    margin-top: 50px;
+    color: #999;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .politique-wrapper {
+        padding: 25px;
+    }
+
+    .politique-wrapper h1 {
+        font-size: 2em;
+    }
+}

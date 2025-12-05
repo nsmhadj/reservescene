@@ -1,0 +1,164 @@
+/* resultat.css */
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #f6f6f6;
+  color: #111;
+}
+
+.event-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 1.5rem 3rem; /* place pour ton header */
+}
+
+.event-header {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 2rem;
+}
+
+
+
+.event-main {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.event-info h1 {
+  font-size: 1.4rem;
+  margin-bottom: .6rem;
+}
+
+.event-price {
+  font-weight: 600;
+  margin-bottom: .4rem;
+}
+
+.event-venue,
+.event-date {
+  color: #555;
+  font-size: .9rem;
+  margin-bottom: .25rem;
+}
+
+.event-description {
+  margin-top: 1rem;
+  line-height: 1.5;
+  color: #333;
+  max-width: 520px;
+}
+
+.reserve-btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  padding: .9rem 2.5rem;
+  margin-top: 1.6rem;
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+
+.event-image img {
+  width: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  max-height: 320px;
+}
+
+/* artistes invités */
+.invited-artists {
+  margin-top: 3rem;
+}
+
+.invited-artists h2 {
+  margin-bottom: 1rem;
+}
+
+.invited-list {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: .5rem;
+}
+
+.invited-card {
+  min-width: 120px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+  border: 1px solid #eee;
+}
+
+.invited-img {
+  width: 100%;
+  height: 90px;
+  background: #ddd;
+}
+
+.invited-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.invited-name {
+  font-size: .8rem;
+  padding: .4rem .3rem .6rem;
+}
+
+/* avis */
+.reviews {
+  margin-top: 3rem;
+}
+
+.reviews h2 {
+  margin-bottom: 1rem;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+}
+
+.review-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1rem;
+  border: 1px solid #eee;
+}
+
+.review-card .stars {
+  color: #f5a623;
+  margin-bottom: .3rem;
+}
+
+.review-card h3 {
+  margin: 0 0 .3rem;
+  font-size: .9rem;
+}
+
+.review-card p {
+  font-size: .8rem;
+  margin: .2rem 0;
+}
+
+.review-card .author {
+  font-size: .7rem;
+  color: #666;
+}
+
+@media (max-width: 900px) {
+  .event-main {
+    grid-template-columns: 1fr;
+  }
+  .event-image img {
+    max-height: none;
+  }
+}

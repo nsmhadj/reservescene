@@ -1,0 +1,90 @@
+/* ---------------------------
+   CONDITIONS - STYLE CLAIR / FOND BLANC + BLOC NOIR
+---------------------------- */
+
+/* Fond général */
+body {
+    background-color: #ffffff; /* ✅ fond blanc */
+    color: #111111;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Zone principale (boîte noire) */
+.conditions-wrapper {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: #0f0f0f; /* ✅ noir profond */
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Titres */
+.conditions-wrapper h1 {
+    font-size: 2.4em;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.conditions-wrapper h2 {
+    color: #ffffff;
+    font-size: 1.4em;
+    margin-top: 40px;
+    border-left: 4px solid #00ff88; /* ✅ vert clair */
+    padding-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.conditions-wrapper h2:hover {
+    color: #00ff88;
+    transform: translateX(5px);
+}
+
+/* Paragraphes */
+.conditions-wrapper p {
+    line-height: 1.8;
+    color: #dddddd;
+    margin: 15px 0;
+}
+
+.conditions-wrapper .intro {
+    text-align: center;
+    font-size: 1.1em;
+    margin-bottom: 40px;
+    color: #cccccc;
+}
+
+/* Liens */
+.conditions-wrapper a {
+    color: #00ff88;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.conditions-wrapper a:hover {
+    text-decoration: underline;
+}
+
+/* Dernière mise à jour */
+.conditions-wrapper .last-update {
+    text-align: right;
+    font-style: italic;
+    margin-top: 50px;
+    color: #999;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .conditions-wrapper {
+        padding: 25px;
+    }
+
+    .conditions-wrapper h1 {
+        font-size: 2em;
+    }
+}

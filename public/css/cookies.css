@@ -1,0 +1,202 @@
+/* ---------------------------
+   COOKIES - PAGE DE GESTION
+---------------------------- */
+
+body {
+    background-color: #ffffff;
+    color: #111;
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.cookies-wrapper {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: #0f0f0f;
+    color: #f5f5f5;
+    border-radius: 16px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.cookies-wrapper h1 {
+    font-size: 2.4rem;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.cookies-intro {
+    margin-bottom: 24px;
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+/* Formulaire */
+
+.cookies-form {
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cookie-category {
+    padding: 16px 18px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cookie-category h2 {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+}
+
+.cookie-category p {
+    margin: 0 0 10px;
+    font-size: 0.9rem;
+    color: #cccccc;
+}
+
+/* Switch / checkbox */
+
+.cookie-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.cookie-switch input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #ffffff;
+}
+
+.cookie-switch.disabled {
+    opacity: 0.7;
+    cursor: default;
+}
+
+/* Boutons */
+
+.cookies-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn {
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+    background: none;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease,
+        transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn-primary {
+    background: #ffffff;
+    color: #0f0f0f;
+    border-color: transparent;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+}
+
+.btn-outline {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.7);
+    background: transparent;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-link {
+    border: none;
+    padding-left: 0;
+    padding-right: 0;
+    color: #bbbbbb;
+    background: none;
+    text-decoration: underline;
+}
+
+.btn-link:hover {
+    color: #ffffff;
+}
+
+/* Partie texte légal */
+
+.cookies-legal {
+    margin-top: 32px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.cookies-legal h2 {
+    font-size: 1.1rem;
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+.cookies-legal ul {
+    padding-left: 20px;
+    margin: 8px 0 14px;
+}
+
+.cookies-legal li {
+    margin-bottom: 4px;
+}
+
+.cookies-legal a {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.cookies-legal a:hover {
+    text-decoration: none;
+}
+
+.last-update {
+    font-size: 0.8rem;
+    font-style: italic;
+    margin-top: 24px;
+    color: #999999;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .cookies-wrapper {
+        margin: 40px 16px;
+        padding: 24px;
+    }
+
+    .cookies-wrapper h1 {
+        font-size: 2rem;
+    }
+
+    .cookies-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn,
+    .btn-primary,
+    .btn-outline {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,161 @@
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 40px;
+    border-bottom: 1px solid #eaeaea;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+}
+
+/* Logo */
+.header-logo img {
+    height: 45px;
+}
+
+
+.header-search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.header-search input {
+    width: 60% !important;
+    max-width: 480px !important;
+    padding: 14px 22px !important;
+    background: #f7f7f7 !important;
+    border: 2px solid #c5c5c5  !important;
+    border-radius: 35px !important;
+    font-size: 17px !important;
+    transition: 0.25s ease !important;
+}
+
+.header-search input:focus {
+    background: #fff !important;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.35) !important;
+    outline: none !important;
+}
+
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    position: relative;
+}
+
+.header-link {
+    color: #333;
+    font-weight: 500;
+    text-decoration: underline; /* liens soulignés */
+    transition: 0.2s;
+}
+
+.header-link:hover {
+    color: #000;
+    text-decoration: underline; /* toujours souligné */
+}
+
+
+/* Profil  */
+.header-profile img {
+    width: 26px;
+    transition: 0.2s;
+}
+.header-profile img:hover { opacity: 0.7; }
+
+/* Menu burger */
+.burger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 26px;
+    height: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+}
+.burger-btn span {
+    width: 100%;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+}
+
+
+
+/* TABLETTE */
+@media (max-width: 992px) {
+    .header {
+        padding: 12px 20px;
+    }
+    .header-nav {
+        gap: 15px;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+    .header {
+        flex-wrap: wrap;
+        padding: 15px 20px;
+        gap: 10px;
+    }
+
+    /* Search en dessous */
+    .header-search {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .header-search input {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    /* Nav */
+    .header-nav {
+        order: 2;
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .header-nav > .header-link,
+    .header-nav > .header-profile {
+        display: none;
+        width: 100%;
+        text-align: left;
+        padding: 10px 0;
+    }
+
+    .header-nav.active > .header-link,
+    .header-nav.active > .header-profile {
+        display: block;
+    }
+
+    .burger-btn {
+        display: flex;
+    }
+}
+
+/* MINI MOBILE */
+@media (max-width: 480px) {
+    .header-logo img {
+        height: 38px;
+    }
+    .header-link {
+        font-size: 14px;
+    }
+    .header-profile img {
+        width: 22px;
+    }
+}

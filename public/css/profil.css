@@ -1,0 +1,169 @@
+/* Styles pour la page de profil modernisée */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #ece9e6, #ffffff);
+  color: #222;
+}
+
+/* Mise en page globale */
+.profile-page {
+  max-width: 750px;
+  margin: 60px auto;
+  padding: 0 20px;
+  font-size: 16px;
+  animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cartes */
+.profile-card,
+.recharge-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  padding: 26px;
+  margin-bottom: 35px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-card:hover,
+.recharge-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Titres */
+.profile-card h2 {
+  margin: 0 0 20px;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.profile-card h3,
+.recharge-card h3 {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Lignes d'info */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s;
+}
+
+.info-row:hover {
+  background: #fafafa;
+}
+
+.info-row:last-of-type {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #666;
+}
+
+.info-value,
+.info-value.solde {
+  color: #111;
+  font-weight: 600;
+}
+
+.info-value.solde {
+  font-size: 1.25rem;
+  color: #00b894;
+}
+
+/* Bouton réservation */
+.reservations-link {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: #111;
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.reservations-link:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}
+
+/* Messages */
+.recharge-message {
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.recharge-message.success {
+  background-color: #e9f9e9;
+  color: #2e7d32;
+  border: 1px solid #b5dfb8;
+}
+
+.recharge-message.error {
+  background-color: #fdecea;
+  color: #c62828;
+  border: 1px solid #f5c6cb;
+}
+
+/* Formulaires */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.edit-form input,
+.edit-form select {
+  padding: 11px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #fafafa;
+  transition: border-color 0.2s;
+}
+
+.edit-form input:focus,
+.edit-form select:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.edit-form button {
+  background-color: #111;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.edit-form button:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}

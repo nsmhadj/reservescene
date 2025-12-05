@@ -1,0 +1,145 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #f8f8f8;
+    color: #333;
+    height: 100%;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: calc(100vh - 70px); 
+    padding: 40px 20px;
+    width: 100%;
+}
+
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    padding: 32px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: 0.2s;
+}
+
+/* TITRE */
+.auth-card h2 {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+/* LABELS ET INPUTS */
+.auth-card label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: 0.25s;
+}
+
+.auth-card input:focus {
+    border-color: #000000;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+    outline: none;
+}
+
+/* BOUTON */
+.auth-card button {
+    width: 100%;
+    padding: 14px;
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.auth-card button:hover {
+    background: #000000;
+}
+
+/* LIENS SOUS FORMULAIRE */
+.auth-links {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+.auth-links a {
+    color: #1a1a1b;
+    text-decoration: none;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+/* MESSAGE D'ERREUR */
+.error-message {
+    color: #d9534f;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+
+
+/* Tablette */
+@media (max-width: 992px) {
+    .auth-container {
+        padding: 30px 20px;
+    }
+
+    .auth-card {
+        padding: 28px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .auth-container {
+        padding: 20px 15px;
+        min-height: calc(100vh - 60px);
+    }
+
+    .auth-card {
+        width: 100%;
+        padding: 20px;
+        box-shadow: none;
+        border-radius: 10px;
+    }
+
+    .auth-links {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://reservescene.alwaysdata.net/sitemap-v1.xml

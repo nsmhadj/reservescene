@@ -1,0 +1,104 @@
+/*
+ * recharge.css — styles pour la page de rechargement du solde.
+ * Cette feuille vise à conserver l'harmonie graphique du site ReserveScene
+ * en reprenant une palette sobre et des cartes épurées similaires à celles
+ * des pages de connexion et de profil.
+ */
+
+/* Structure principale de la page */
+.recharge-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 4rem 1rem;
+    min-height: calc(100vh - 200px); /* laisse de la place pour l'en-tête et le pied de page */
+    background-color: #fdfdfd;
+}
+
+/* Conteneur de la carte de recharge */
+.recharge-container {
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
+}
+
+.recharge-container h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #333333;
+    text-align: center;
+}
+
+/* Style du formulaire */
+.recharge-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.recharge-label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #555555;
+}
+
+/* Champ de saisie */
+.recharge-form input[type="text"] {
+    padding: 0.7rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    background-color: #fafafa;
+    transition: border-color 0.2s;
+}
+
+.recharge-form input[type="text"]:focus {
+    outline: none;
+    border-color: #111;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Bouton de soumission : reprend la palette sombre de ReserveScene */
+.recharge-button {
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #111;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.recharge-button:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+}
+
+/* Messages de statut */
+.recharge-message {
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.recharge-message.success {
+    background-color: #e3f8e7;
+    color: #247a3e;
+    border: 1px solid #c1e7cb;
+}
+
+.recharge-message.error {
+    background-color: #fdecea;
+    color: #8a1c1c;
+    border: 1px solid #f5c7c2;
+}

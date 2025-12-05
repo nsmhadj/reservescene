@@ -1,0 +1,192 @@
+:root{--max-width:1200px}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#fff;color:#111;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+/* Layout */
+.hero{position:relative;width:100%;height:clamp(280px,55vh,600px);overflow:hidden;background:#000}
+.hero__viewport{width:100%;height:100%;position:relative}
+
+.trending,.showcases{max-width:var(--max-width);margin:2.5rem auto;padding:0 1rem}
+
+/* Cookie banner */
+/*****************************
+ *  BANNIÈRE COOKIES (WIDGET)
+ *****************************/
+
+.cookie-banner {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 999999;
+
+    max-width: 360px;
+    width: calc(100% - 40px);
+
+    padding: 16px 18px;
+    border-radius: 14px;
+
+    /* 🔥 effet verre / glassmorphism */
+    background: rgba(140, 140, 140, 0.35); /* semi-transparent */
+    backdrop-filter: blur(18px) saturate(130%);
+    -webkit-backdrop-filter: blur(18px) saturate(130%);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+
+    color: #f2f2f2;
+    font-size: 0.9rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+
+/* Contenu interne */
+
+.cookie-banner-inner {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cookie-banner-text {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Zone des boutons + lien */
+
+.cookie-banner-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.cookie-banner-form {
+    display: flex;
+    gap: 8px;
+}
+
+/* Boutons */
+
+.cookie-btn {
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        background 0.12s ease,
+        color 0.12s ease,
+        border-color 0.12s ease;
+}
+
+.cookie-btn-primary {
+    background: #ffffff;
+    color: #111111;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.35);
+}
+
+.cookie-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 16px rgba(0, 0, 0, 0.45);
+    background: #f5f5f5;
+}
+
+.cookie-btn-secondary {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.cookie-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.28);
+}
+
+/* Lien "En savoir plus" */
+
+.cookie-banner-more {
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+.cookie-banner-more a {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    opacity: 0.85;
+}
+
+.cookie-banner-more a:hover {
+    opacity: 1;
+}
+
+/* Optionnel : icône à côté du texte */
+
+.cookie-banner-icon {
+    margin-right: 6px;
+    font-size: 1rem;
+    vertical-align: middle;
+}
+
+/*****************************
+ *  RESPONSIVE
+ *****************************/
+
+@media (max-width: 768px) {
+    .cookie-banner {
+        right: 12px;
+        left: 12px;
+        width: auto;
+        padding: 14px 14px;
+        border-radius: 12px;
+        max-width: none;
+    }
+
+    .cookie-banner-form {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .cookie-btn {
+        flex: 1;
+        text-align: center;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .cookie-banner-more {
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .cookie-banner {
+        padding: 12px 12px;
+    }
+
+    .cookie-banner-text {
+        font-size: 0.85rem;
+    }
+}
+
+/* Showcases small tweaks */
+.showcase-row{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.showcase-item{width:140px;height:160px;border-radius:8px;overflow:hidden;background:#f1f1f1;display:flex;align-items:center;justify-content:center}
+.showcase-item img{width:100%;height:100%;object-fit:cover}
+
+/* Footer safe area */
+.site-footer{padding-bottom:calc(40px + env(safe-area-inset-bottom));}
+
+/* Responsive rules */
