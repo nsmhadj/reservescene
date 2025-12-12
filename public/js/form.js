@@ -1,28 +1,28 @@
-// form.js
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const nbSelect = document.getElementById("nb_places");
   const guestBlock = document.getElementById("guest-block");
   const form = document.getElementById("reservation-form");
 
-  // Affichage / masquage bloc 2ᵉ personne
+  
   if (nbSelect && guestBlock) {
     const toggleGuest = () => {
       if (nbSelect.value === "2") {
         guestBlock.classList.add("guest-visible");
       } else {
         guestBlock.classList.remove("guest-visible");
-        // Optionnel : vider les champs
+        
         const guestInputs = guestBlock.querySelectorAll("input");
         guestInputs.forEach((input) => (input.value = ""));
       }
     };
 
     nbSelect.addEventListener("change", toggleGuest);
-    toggleGuest(); // état initial
+    toggleGuest(); 
   }
 
-  // Mini validation côté client (en plus de PHP)
+  
   if (form) {
     form.addEventListener("submit", (e) => {
       const lastname = document.getElementById("holder_lastname");

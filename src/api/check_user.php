@@ -1,8 +1,7 @@
 <?php
-// check_user.php
+
 header('Content-Type: application/json');
 
-// Load database configuration
 require_once __DIR__ . '/../../config/database.php';
 
 if (!isset($_GET['username'])) {
@@ -12,7 +11,6 @@ if (!isset($_GET['username'])) {
 
 $username = trim($_GET['username']);
 
-// $pdo is already initialized from config/database.php
 try {
 
     $stmt = $pdo->prepare("

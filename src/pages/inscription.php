@@ -2,20 +2,18 @@
 session_start();
 $message = "";
 require_once __DIR__ . '/../../config/bootstrap.php';
-/* === Config hCaptcha - loaded from environment variables === */
-$HCAPTCHA_SITEKEY = getenv('HCAPTCHA_SITEKEY') ?: "";  
+
+$HCAPTCHA_SITEKEY = getenv('HCAPTCHA_SITEKEY') ?: "";
 $HCAPTCHA_SECRET  = getenv('HCAPTCHA_SECRET') ?: "";
 
 if (!$HCAPTCHA_SITEKEY || !$HCAPTCHA_SECRET) {
-    // hCaptcha not configured - skip verification for development
     $HCAPTCHA_SITEKEY = null;
     $HCAPTCHA_SECRET = null;
 }
 
-/* === Connexion DB === */
+
 require_once __DIR__ . '/../../config/database.php';
 
-/* === Générateur de clé unique === */
 function generateClef($length = 6) {
     $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $clef = '';
@@ -25,7 +23,6 @@ function generateClef($length = 6) {
     return $clef;
 }
 
-/* === Supprimer comptes expirés en attente === */
 $now = time();
 $delete = $pdo->prepare("
     DELETE FROM client
@@ -35,7 +32,7 @@ $delete = $pdo->prepare("
 ");
 $delete->execute(['now' => $now]);
 
-/* === Traitement formulaire === */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nom      = trim($_POST['nom'] ?? '');
@@ -47,11 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $password2 = $_POST['password2'] ?? '';
 
-    if (
-        $nom === '' || $prenom === '' || $login === '' || $email === '' ||
-        $tel === '' || $sexe === '' || $password === '' || $password2 === ''
-    ) {
-        $message = "Tous les champs sont requis.";
+    if ($nom === '' || $prenom === '' || $login === '' || $email === '' || $password === '' || $password2 === '') {
+        $message = "Tous les champs obligatoires doivent être remplis.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $message = "Adresse e-mail invalide.";
     } elseif (strlen($password) < 8) {
@@ -60,17 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "Les mots de passe ne correspondent pas.";
     } else {
 
-        /* === Vérification hCaptcha === */
-        $hcaptchaResponse = $_POST['h-captcha-response'] ?? '';
-
-        // Skip hCaptcha verification if not configured (development mode)
+      
         if ($HCAPTCHA_SECRET && $HCAPTCHA_SITEKEY) {
+            $hcaptchaResponse = $_POST['h-captcha-response'] ?? '';
             if (empty($hcaptchaResponse)) {
                 $message = "Veuillez confirmer que vous n'êtes pas un robot.";
             } else {
                 $verifyUrl = "https://hcaptcha.com/siteverify";
                 $data = [
-                    'secret'   => $HCAPTCHA_SECRET,
+                    'secret' => $HCAPTCHA_SECRET,
                     'response' => $hcaptchaResponse,
                     'remoteip' => $_SERVER['REMOTE_ADDR'] ?? null
                 ];
@@ -84,9 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 curl_close($ch);
 
                 $resultData = json_decode($result, true);
-
                 if (!$resultData || empty($resultData['success'])) {
-                    $message = "La vérification du captcha a échoué. Veuillez réessayer.";
+                    $message = "La vérification du captcha a échoué.";
                 }
             }
         }
@@ -110,6 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hash    = password_hash($password, PASSWORD_DEFAULT);
                 $clef    = generateClef();
                 $expires = time() + 15 * 60;
+
+                $tel  = $tel ?: null;
+                $sexe = $sexe ?: null;
 
                 $insert = $pdo->prepare("
                     INSERT INTO client (
@@ -148,33 +142,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'expires' => $expires
                 ]);
 
-                $subject = "Activation de votre compte RéserveScene";
-                $body = "
-                <html>
-                  <body style='font-family:Arial,sans-serif;color:#222;'>
-                    <p>Bonjour <strong>" . htmlspecialchars($prenom, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</strong>,</p>
-                    <p>Merci pour votre inscription sur <strong>RéserveScene</strong> </p>
-                    <p>Votre code de validation unique est :</p>
-                    <p style='font-size:20px; font-weight:bold;'>" . htmlspecialchars($clef, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</p>
-                    <p> Saisissez ce code sur le site pour activer votre compte.</p>
-                    <p><strong> Ce code est valable 15 minutes, pensez à vérifier vos spams.</strong></p>
-                    <p>Si vous ne validez pas dans ce délai, votre inscription sera supprimée automatiquement.</p>
-                    <p>Cordialement,<br>L’équipe RéserveScene</p>
-                  </body>
-                </html>
-                ";
-
-                $headers  = "MIME-Version: 1.0\r\n";
-                $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-                $headers .= "From: no-reply@reservescene.alwaysdata.net\r\n";
-
-                @mail($email, $subject, $body, $headers);
-
+        
                 $_SESSION['pending_validation'] = [
                     'email'   => $email,
                     'clef'    => $clef,
                     'expires' => $expires
                 ];
+
+                $subject = "Validation de votre compte";
+                $body = "Bonjour $prenom $nom,\n\n"
+                      . "Merci de créer votre compte.\n"
+                      . "Pour valider votre compte, utilisez ce code : $clef\n\n"
+                      . "Ce code est valable 15 minutes.\n\n"
+                      . "Si vous n'avez pas demandé cette action, ignorez ce message.\n\n"
+                      . "Cordialement,\nL'équipe de ReserveScene.";
+
+                @mail($email, $subject, $body, "From: no-reply@reservescene.tld\r\n");
 
                 header("Location: validation_email.php?email=" . urlencode($email));
                 exit;
@@ -183,98 +166,144 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include __DIR__ . '/../includes/header.php';
+
 ?>
 
-<main style="display:flex;justify-content:center;align-items:center;min-height:80vh;">
-  <div style="width:100%;max-width:550px;background:#fff;border:1px solid #e9e9e9;border-radius:6px;padding:25px;box-shadow:0 6px 20px rgba(0,0,0,0.05);">
-    <h2 style="font-size:18px;font-weight:600;margin-bottom:10px;">Inscription</h2>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReserveScene — Inscription</title>
+  <meta name="description" content="ReserveScene est une plateforme de réservation de billets pour concerts, spectacles et événements culturels. Trouve et réserve facilement tes places.">
+<link rel="stylesheet" href="/public/css/inscription.css">
+</head>
 
-    <?php if ($message): ?>
-      <div style="color:#d9534f;margin-bottom:12px;text-align:center;">
-        <?= htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
-      </div>
-    <?php endif; ?>
+    <?php include __DIR__ . '/../includes/header.php'; ?>
+<main class="inscription-wrapper">
+    <div class="inscription-card">
+        <h2>Créer un compte</h2>
 
-    <form method="post" autocomplete="off">
-      <label>Nom</label>
-      <input name="nom" type="text" required style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:6px;">
+        <?php if ($message): ?>
+            <div class="form-error">
+                <?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?>
+            </div>
+        <?php endif; ?>
 
-      <label>Prénom</label>
-      <input name="prenom" type="text" required style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:6px;">
+        <form method="post" autocomplete="off">
+            <div class="form-grid">
+                <div>
+                    
+                    <input name="nom" aria-label="nom" placeholder="Nom" type="text" required>
+                </div>
+                <div>
+                  
+                    <input name="prenom" aria-label="prenom" placeholder="Prenom" type="text" required>
+                </div>
+            </div>
 
-      <label>Login</label>
-      <input name="login" id="login" type="text" required style="width:100%;padding:10px;margin-bottom:3px;border:1px solid:#ccc;border-radius:6px;">
-      <span id="login-info" style="font-size:13px;margin-bottom:10px;display:block;"></span>
+            
+            <input name="login" id="login"  aria-label="id" placeholder="ID" type="text" required>
+            <span id="login-info" class="live-info"></span>
 
-      <label>Email</label>
-      <input name="email" id="email" type="email" required style="width:100%;padding:10px;margin-bottom:3px;border:1px solid #ccc;border-radius:6px;">
-      <span id="email-info" style="font-size:13px;margin-bottom:10px;display:block;"></span>
+            
+            <input name="email" id="email" aria-label="email" placeholder="ton.email@example.com" type="email" required>
+            <span id="email-info" class="live-info"></span>
 
-      <label>Téléphone</label>
-      <input name="tel" type="text" required style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:6px;">
+            
+            <input name="tel" aria-label="tel" placeholder="Telephone" type="text">
 
-      <label>Sexe</label>
-      <select name="sexe" required style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:6px;">
-        <option value="">Choisissez</option>
-        <option value="H">Homme</option>
-        <option value="F">Femme</option>
-      </select>
+            
+            <select name="sexe" aria-label="sexe">
+                <option value="">Choisissez votre sexe</option>
+                <option value="H">Homme</option>
+                <option value="F">Femme</option>
+            </select>
 
-      <label>Mot de passe</label>
-      <input name="password" type="password" required style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:6px;">
+           
+            <input name="password" id="password" aria-label="mdpss" placeholder="Votre mot de passe" type="password" required>
 
-      <label>Confirmer le mot de passe</label>
-      <input name="password2" type="password" required style="width:100%;padding:10px;margin-bottom:15px;border:1px solid #ccc;border-radius:6px;">
+            <div id="password-rules" class="password-rules">
+                <p id="rule-length" class="rule">Minimum 8 caractères</p>
+                <p id="rule-uppercase" class="rule">Au moins 1 majuscule</p>
+                <p id="rule-number" class="rule">Au moins 1 chiffre</p>
+                <p id="rule-special" class="rule">Au moins 1 caractère spécial</p>
+            </div>
 
-      <!-- hCaptcha widget - only show if configured -->
-      <?php if ($HCAPTCHA_SITEKEY): ?>
-      <div class="h-captcha" data-sitekey="<?= htmlspecialchars($HCAPTCHA_SITEKEY, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>" style="margin-bottom:15px;"></div>
-      <?php endif; ?>
+   
+            <input name="password2"  aria-label="mdpssconf" placeholder="Confirmez votre mot de passe" type="password" required>
 
-      <button type="submit" style="width:100%;padding:11px;border-radius:6px;background:#222;color:#fff;border:none;cursor:pointer;">
-        Créer mon compte
-      </button>
-    </form>
-  </div>
+            <?php if ($HCAPTCHA_SITEKEY): ?>
+            <div class="captcha-container" >
+                <div class="h-captcha"  aria-hidden="true"  data-sitekey="<?= htmlspecialchars($HCAPTCHA_SITEKEY, ENT_QUOTES) ?>"></div>
+            </div>
+            <?php endif; ?>
+
+            <button class="btn-submit" type="submit">Créer mon compte</button>
+        </form>
+    </div>
 </main>
 
-<!-- Script hCaptcha -->
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 
-<!-- ====================================================================== -->
-<!-- JS LIVE LOGIN & EMAIL VALIDATION AJAX -->
 <script>
 function checkField(type, value, spanId) {
     if (value.trim().length < 2) {
-        document.getElementById(spanId).textContent = "";
+        const span = document.getElementById(spanId);
+        span.textContent = "";
+        span.classList.remove("good", "bad");
         return;
     }
 
-    fetch("check_inscription.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: type + "=" + encodeURIComponent(value)
-    })
+    fetch(`../api/check_inscription.php?type=${encodeURIComponent(type)}&value=${encodeURIComponent(value)}`)
     .then(res => res.json())
     .then(data => {
+        const span = document.getElementById(spanId);
         if (data.exists === true) {
-            document.getElementById(spanId).style.color = "red";
-            document.getElementById(spanId).textContent = type + " invalide ✘";
+            span.classList.add("bad");
+            span.classList.remove("good");
+            span.textContent = type + " invalide ✘";
         } else {
-            document.getElementById(spanId).style.color = "green";
-            document.getElementById(spanId).textContent = type + " valide ✔";
+            span.classList.add("good");
+            span.classList.remove("bad");
+            span.textContent = type + " valide ✔";
         }
     })
     .catch(err => console.error(err));
 }
 
-document.getElementById("login").addEventListener("blur", function() {
-    checkField("login", this.value, "login-info");
+
+document.getElementById("login").addEventListener("blur", () => {
+    const loginInput = document.getElementById("login");
+    checkField("login", loginInput.value, "login-info");
 });
 
-document.getElementById("email").addEventListener("blur", function() {
-    checkField("email", this.value, "email-info");
+
+document.getElementById("email").addEventListener("blur", () => {
+    const emailInput = document.getElementById("email");
+    const span = document.getElementById("email-info");
+    const value = emailInput.value.trim();
+
+   
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+        span.classList.add("bad");
+        span.classList.remove("good");
+        span.textContent = "email invalide ✘";
+        return;
+    }
+
+    checkField("email", value, "email-info");
+});
+
+
+const passwordInput = document.getElementById("password");
+passwordInput.addEventListener("input", () => {
+    const value = passwordInput.value;
+    document.getElementById("rule-length").style.color = value.length >= 8 ? "green" : "black";
+    document.getElementById("rule-uppercase").style.color = /[A-Z]/.test(value) ? "green" : "black";
+    document.getElementById("rule-number").style.color = /\d/.test(value) ? "green" : "black";
+    document.getElementById("rule-special").style.color = /[!@#$%^&*(),.?":{}|<>]/.test(value) ? "green" : "black";
 });
 </script>
 

@@ -1,4 +1,4 @@
-// reservation.js
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const cards = document.querySelectorAll(".reservation-card-item");

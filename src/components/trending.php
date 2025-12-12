@@ -1,23 +1,19 @@
 <?php
-/**
- * trending.php - rendu serveur pour la zone #trendingList
- * Inclure INSIDE la div.trending__list :
- * <?php include_once __DIR__ . '/../src/components/trending.php'; ?> (from public/)
- */
+
 
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Shared helpers (include_once pour éviter redéclarations)
+
 include_once __DIR__ . '/../includes/helpers.php';
 
-/* small helper to shorten text server-side as a fallback */
+
 if (!function_exists('shorten_text')) {
     function shorten_text(string $s, int $max = 220): string {
         $s = trim($s);
         if ($s === '') return '';
         if (mb_strlen($s) <= $max) return $s;
-        // cut at nearest space before limit
+      
         $cut = mb_substr($s, 0, $max);
         $lastSpace = mb_strrpos($cut, ' ');
         if ($lastSpace !== false) {
@@ -28,7 +24,7 @@ if (!function_exists('shorten_text')) {
 }
 require_once __DIR__ . '/../../config/bootstrap.php' ;
 
-// Ticketmaster API key from environment variable
+
 $TM_API_KEY = getenv('TM_API_KEY') ;
 $API_ENDPOINT = 'https://app.ticketmaster.com/discovery/v2/events.json';
 $CACHE_TTL = 60;
@@ -60,10 +56,9 @@ try {
         return;
     }
 
-    // shuffle
     $events = shuffle_array_safe($events);
 
-    // dedupe & pick up to 3
+
     $seen = [];
     $selected = [];
     foreach ($events as $ev) {
@@ -90,10 +85,9 @@ try {
         $urlEvent = $ev['url'] ?? '';
         $eventId = $ev['id'] ?? '';
 
-        // URL interne vers resultat.php (préférée)
+   
         $resultUrl = $eventId ? 'resultat.php?id=' . rawurlencode($eventId) : '';
 
-        // Price display (API or generated fallback)
         $priceInfo = get_price_display_for_event($ev);
         $priceHtml = '<div class="trending-card__price">' . h($priceInfo['display']) . '</div>';
 
@@ -105,7 +99,7 @@ try {
         echo '</div>';
         echo '<div class="trending-card__body">';
         echo '<h3 class="trending-card__title">' . h($title) . '</h3>';
-        // server-side shortened fallback; CSS will clamp visually to 3 lines
+      
         echo '<p class="trending-card__desc">' . h(shorten_text($desc, 220)) . '</p>';
         echo $priceHtml;
 

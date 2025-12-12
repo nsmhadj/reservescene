@@ -1,7 +1,6 @@
 <?php
-// index.php adapté pour garder la structure "pc" mais compatible avec header.php (nassim)
 $nom_cookie    = 'consentement_cookies';
-$duree_cookie  = 365 * 24 * 3600; // 1 an
+$duree_cookie  = 24 * 3600; 
 $chemin_cookie = '/';
 
 function definir_cookie($nom, $valeur, $duree, $chemin = '/')
@@ -9,7 +8,7 @@ function definir_cookie($nom, $valeur, $duree, $chemin = '/')
     setcookie($nom, $valeur, time() + $duree, $chemin);
 }
 
-// Lecture du consentement existant
+
 $consentement = null;
 if (isset($_COOKIE[$nom_cookie])) {
     $decode = json_decode($_COOKIE[$nom_cookie], true);
@@ -18,7 +17,6 @@ if (isset($_COOKIE[$nom_cookie])) {
     }
 }
 
-// Traitement des actions de la bannière (index.php)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_consentement'])) {
 
     if ($_POST['action_consentement'] === 'tout_accepter') {
@@ -42,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_consentement']
             'donne' => true,
             'date' => time(),
             'categories' => [
-                'necessaires' => true,   // toujours vrais
+                'necessaires' => true,   
                 'preferences' => false,
                 'analytiques' => false,
                 'marketing'   => false,
@@ -54,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_consentement']
     }
 }
 
-include __DIR__ . '/src/includes/header.php';
+
 ?>
 <!doctype html>
 <html lang="fr">
@@ -64,7 +62,7 @@ include __DIR__ . '/src/includes/header.php';
   <title>ReserveScene — Accueil</title>
   <meta name="description" content="ReserveScene est une plateforme de réservation de billets pour concerts, spectacles et événements culturels. Trouve et réserve facilement tes places.">
 
-  <!-- CSS pour la bannière cookies + styles principaux -->
+
   <link rel="stylesheet" href="public/css/index.css">
   <link rel="stylesheet" href="public/css/banner.css">
   <link rel="stylesheet" href="public/css/trending.css">
@@ -72,7 +70,10 @@ include __DIR__ . '/src/includes/header.php';
   <link rel="stylesheet" href="public/css/footer.css">
 </head>
 
-<body <?php echo (!$consentement || empty($consentement['donne'])) ? 'class="banner-open"' : ''; ?>>
+
+<?php 
+include __DIR__ . '/src/includes/header.php';
+echo (!$consentement || empty($consentement['donne'])) ? 'class="banner-open"' : ''; ?>>
 
 <?php if (!$consentement || empty($consentement['donne'])): ?>
 <div class="cookie-banner" role="dialog" aria-live="polite" aria-label="Bannière de cookies">
@@ -109,8 +110,9 @@ include __DIR__ . '/src/includes/header.php';
 
 
 <section class="hero">
-  <div id="heroViewport" class="hero__viewport"></div>
+ <div id="heroViewport" class="hero__viewport"></div>
 </section>
+<h1 class="visually-hidden">ReserveScene – Billetterie et spectacles</h1>
 
 <section class="trending" id="trending">
   <div class="trending__head">
@@ -118,17 +120,15 @@ include __DIR__ . '/src/includes/header.php';
     <p class="trending__tag">#tendances</p>
   </div>
 
-  <!-- include INSIDE le conteneur prévu -->
+ 
   <div class="trending__list" id="trendingList">
     <?php include_once __DIR__ . '/src/components/trending.php'; ?>
   </div>
 </section>
-
+<script src="public/js/banner.js"></script>
 <?php include_once __DIR__ . '/src/components/showcases.php'; ?>
 <?php include_once __DIR__ . '/src/includes/footer.php'; ?>
-<!-- scripts  -->
-<script src="public/js/banner.js"></script>
 
 
-</body>
-</html>
+
+

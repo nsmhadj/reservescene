@@ -10,6 +10,9 @@ body {
   overflow: hidden;
   background: #000;
 }
+.hero__caption {
+  color : #fff ;
+}
 
 .hero__viewport {
   position: relative;

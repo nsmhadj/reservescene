@@ -1,4 +1,4 @@
-/* resultat.css */
+
 
 body {
   margin: 0;
@@ -10,13 +10,7 @@ body {
 .event-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 6rem 1.5rem 3rem; /* place pour ton header */
-}
-
-.event-header {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 2rem;
+  padding: 6rem 1.5rem 4rem;
 }
 
 
@@ -29,136 +23,165 @@ body {
 }
 
 .event-info h1 {
-  font-size: 1.4rem;
-  margin-bottom: .6rem;
+  font-size: 2rem;
+  margin-bottom: .4rem;
+  font-weight: 700;
 }
 
 .event-price {
   font-weight: 600;
-  margin-bottom: .4rem;
+  margin-bottom: .6rem;
+  font-size: 1.1rem;
 }
 
 .event-venue,
 .event-date {
   color: #555;
-  font-size: .9rem;
-  margin-bottom: .25rem;
+  font-size: .95rem;
+  margin-bottom: .3rem;
 }
 
 .event-description {
   margin-top: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
   color: #333;
-  max-width: 520px;
+  max-width: 550px;
 }
 
 .reserve-btn {
   display: inline-block;
-  background: #000;
+  background: #111;
   color: #fff;
   text-decoration: none;
-  padding: .9rem 2.5rem;
-  margin-top: 1.6rem;
+  padding: .85rem 2rem;
+  margin-top: 1.8rem;
   font-weight: 600;
-  letter-spacing: .03em;
+  border-radius: 8px;
+  transition: .2s;
+}
+
+.reserve-btn:hover {
+  background: #333;
 }
 
 .event-image img {
   width: 100%;
-  border-radius: 16px;
+  border-radius: 18px;
   object-fit: cover;
-  max-height: 320px;
+  max-height: 300px;
 }
 
-/* artistes invités */
+
+
+.event-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-map {
+  width: 100%;
+  height: 280px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ddd;
+  border: 1px solid #e3e3e3;
+}
+
+
 .invited-artists {
-  margin-top: 3rem;
+  margin-top: 3.5rem;
 }
 
 .invited-artists h2 {
+  font-size: 1.6rem;
   margin-bottom: 1rem;
+  font-weight: 600;
 }
 
 .invited-list {
   display: flex;
-  gap: 1rem;
+  gap: 1.2rem;
   overflow-x: auto;
   padding-bottom: .5rem;
 }
 
-.invited-card {
-  min-width: 120px;
+.artist-card {
+  min-width: 130px;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   text-align: center;
-  border: 1px solid #eee;
 }
 
-.invited-img {
+.artist-img {
   width: 100%;
-  height: 90px;
-  background: #ddd;
-}
-
-.invited-img img {
-  width: 100%;
-  height: 100%;
+  height: 100px;
   object-fit: cover;
 }
 
-.invited-name {
-  font-size: .8rem;
-  padding: .4rem .3rem .6rem;
+.artist-name {
+  font-weight: 600;
+  padding: .6rem .4rem .9rem;
+  font-size: .9rem;
 }
 
-/* avis */
+
+
 .reviews {
-  margin-top: 3rem;
+  margin-top: 4rem;
 }
 
 .reviews h2 {
   margin-bottom: 1rem;
+  font-size: 1.6rem;
 }
 
 .reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
 }
 
 .review-card {
   background: #fff;
   border-radius: 14px;
-  padding: 1rem;
+  padding: 1.2rem;
   border: 1px solid #eee;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
 }
 
-.review-card .stars {
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: .4rem;
+}
+
+.review-stars {
   color: #f5a623;
-  margin-bottom: .3rem;
 }
 
-.review-card h3 {
-  margin: 0 0 .3rem;
+.review-text {
+  color: #444;
   font-size: .9rem;
+  margin-top: .5rem;
 }
 
-.review-card p {
-  font-size: .8rem;
-  margin: .2rem 0;
-}
 
-.review-card .author {
-  font-size: .7rem;
-  color: #666;
-}
+
 
 @media (max-width: 900px) {
   .event-main {
     grid-template-columns: 1fr;
   }
+
   .event-image img {
-    max-height: none;
+    max-height: unset;
+  }
+
+  .event-side {
+    margin-top: 1.5rem;
   }
 }
+

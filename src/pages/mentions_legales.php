@@ -1,7 +1,5 @@
 <?php
-// ----------------------
-// mentions_legales.php
-// ----------------------
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -10,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mentions légales - ReserveScene</title>
 
-    <!-- Feuille de style principale -->
+
     <link rel="stylesheet" href="style.css?v=6">
-    <!-- Feuille de style spécifique -->
+    
     <link rel="stylesheet" href="/public/css/mentions_legales.css?v=4">
 </head>
 <body>

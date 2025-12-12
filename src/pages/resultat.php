@@ -1,75 +1,204 @@
 <?php
-// resultat.php - always show a price: real if available, otherwise deterministic estimation
-include __DIR__ . '/../includes/header.php';
+
+
+
 include_once __DIR__ . '/../includes/helpers.php';
 require_once __DIR__ . '/../../config/bootstrap.php';
 
-$eventId = isset($_GET['id']) ? trim($_GET['id']) : '';
+$rawId = isset($_GET['id']) ? trim((string)$_GET['id']) : '';
+$eventId = $rawId;
 $eventData = null;
 $fetchError = null;
-
-if ($eventId !== '') {
-    // Load API key from environment variable
-    $apiKey = getenv('TM_API_KEY') ;
-    $url = "https://app.ticketmaster.com/discovery/v2/events/" . rawurlencode($eventId) . ".json?apikey=" . rawurlencode($apiKey);
-
-    // prefer cURL
+$googleapi = getenv('GOOGLE_KEY');
+function http_get(string $url, int $timeout = 10) {
     if (function_exists('curl_version')) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'ReserveScene/1.0');
-        $json = curl_exec($ch);
+        $body = curl_exec($ch);
         $http = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlErr = curl_error($ch);
+        $err = curl_error($ch);
         curl_close($ch);
-
-        if ($json === false || $json === '') {
-            $fetchError = "cURL error: " . $curlErr . " (http: " . intval($http) . ")";
-            error_log("[resultat.php] fetch failed for $url : $fetchError");
-        } else {
-            $eventData = @json_decode($json, true);
-            if ($eventData === null) {
-                $fetchError = "Invalid JSON or empty response (http: " . intval($http) . ")";
-                error_log("[resultat.php] json decode failed for $url : raw=" . substr($json, 0, 1000));
-            }
-        }
+        return [$body, $http, $err];
     } else {
-        $ctx = stream_context_create(['http' => ['timeout' => 10, 'user_agent' => 'ReserveScene/1.0']]);
-        $json = @file_get_contents($url, false, $ctx);
-        if ($json === false) {
-            $fetchError = "file_get_contents failed (check allow_url_fopen / firewall)";
-            error_log("[resultat.php] fetch failed for $url : $fetchError");
-        } else {
-            $eventData = @json_decode($json, true);
-            if ($eventData === null) {
-                $fetchError = "Invalid JSON from upstream";
-                error_log("[resultat.php] json decode failed for $url : raw=" . substr($json, 0, 1000));
-            }
-        }
+        $ctx = stream_context_create(['http' => ['timeout' => $timeout, 'user_agent' => 'ReserveScene/1.0']]);
+        $body = @file_get_contents($url, false, $ctx);
+        return [$body, ($body === false ? 0 : 200), null];
     }
 }
 
-// Compute price display:
-// - if we have event data: use helper (real price or helper fallback)
-// - otherwise: generate deterministic price from event id so there's ALWAYS a price shown
+function map_seatgeek_for_resultat(array $sk): array {
+    $m = [];
+
+    $m['name'] = $sk['title'] ?? ($sk['short_title'] ?? ($sk['performers'][0]['name'] ?? ''));
+
+    $m['images'] = [];
+   
+    if (!empty($sk['performers']) && is_array($sk['performers'])) {
+        foreach ($sk['performers'] as $p) {
+            if (!empty($p['image'])) {
+                $m['images'][] = ['url' => $p['image']];
+            } elseif (!empty($p['images']) && is_array($p['images'])) {
+                if (!empty($p['images']['huge'])) $m['images'][] = ['url' => $p['images']['huge']];
+                else {
+                    foreach ($p['images'] as $v) {
+                        if (is_string($v) && filter_var($v, FILTER_VALIDATE_URL)) {
+                            $m['images'][] = ['url' => $v];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (empty($m['images']) && !empty($sk['image'])) {
+        $m['images'][] = ['url' => $sk['image']];
+    }
+  
+    if (empty($m['images']) && !empty($sk['images']) && is_array($sk['images'])) {
+        foreach ($sk['images'] as $img) {
+            if (is_string($img) && filter_var($img, FILTER_VALIDATE_URL)) {
+                $m['images'][] = ['url' => $img];
+            } elseif (is_array($img) && !empty($img['url'])) {
+                $m['images'][] = ['url' => $img['url']];
+            }
+            if (!empty($m['images'])) break;
+        }
+    }
+
+   
+    $m['dates'] = ['start' => []];
+    if (!empty($sk['datetime_local'])) {
+        $m['dates']['start']['localDate'] = substr($sk['datetime_local'], 0, 10);
+        $m['dates']['start']['localTime'] = substr($sk['datetime_local'], 11);
+    }
+    if (!empty($sk['datetime_utc'])) {
+        $m['dates']['start']['dateTime'] = $sk['datetime_utc'];
+    }
+
+
+    $m['_embedded'] = [];
+    if (!empty($sk['venue']) && is_array($sk['venue'])) {
+        $m['_embedded']['venues'] = [[
+            'name' => $sk['venue']['name'] ?? null,
+            'address' => ['line1' => $sk['venue']['address'] ?? null],
+            'postalCode' => $sk['venue']['postal_code'] ?? null,
+            'city' => ['name' => $sk['venue']['city'] ?? null],
+            'country' => ['name' => $sk['venue']['country'] ?? null],
+            'location' => [
+                'latitude' => $sk['venue']['location']['lat'] ?? null,
+                'longitude' => $sk['venue']['location']['lon'] ?? null,
+            ],
+        ]];
+    }
+
+    
+    if (!empty($sk['description'])) $m['info'] = $sk['description'];
+    elseif (!empty($sk['short_title'])) $m['pleaseNote'] = $sk['short_title'];
+
+    if (!empty($sk['stats']['lowest_price']) || !empty($sk['stats']['highest_price'])) {
+        $min = !empty($sk['stats']['lowest_price']) ? (float)$sk['stats']['lowest_price'] : null;
+        $max = !empty($sk['stats']['highest_price']) ? (float)$sk['stats']['highest_price'] : $min;
+        $m['priceRanges'] = [];
+        if ($min !== null) $m['priceRanges'][] = ['min' => $min, 'max' => $max, 'currency' => $sk['currency'] ?? 'USD'];
+    }
+
+    $m['_raw_seatgeek'] = $sk;
+
+    return $m;
+}
+
+$source = 'tm';
+$tmId = $eventId;
+$skId = null;
+if (stripos($eventId, 'sk:') === 0) {
+    $skId = substr($eventId, 3);
+    $source = 'sk';
+} elseif (stripos($eventId, 'tm:') === 0) {
+    $tmId = substr($eventId, 3);
+    $source = 'tm';
+} else {
+ 
+    $source = 'tm';
+    $tmId = $eventId;
+}
+
+
+if ($source === 'sk' && $skId !== null && $skId !== '') {
+  
+    $clientId = getenv('SEATGEEK_CLIENT_ID') ?: (defined('SEATGEEK_CLIENT_ID') ? SEATGEEK_CLIENT_ID : '');
+    $clientSecret = getenv('SEATGEEK_CLIENT_SECRET') ?: (defined('SEATGEEK_CLIENT_SECRET') ? SEATGEEK_CLIENT_SECRET : '');
+    if (!$clientId) {
+        $fetchError = "SEATGEEK_CLIENT_ID missing";
+        error_log("[resultat.php] $fetchError");
+    } else {
+        $url = 'https://api.seatgeek.com/2/events/' . rawurlencode($skId) . '?' . http_build_query(['client_id' => $clientId] + ($clientSecret ? ['client_secret' => $clientSecret] : []));
+        list($body, $http, $curlErr) = http_get($url, 10);
+        if ($body === false || $http < 200 || $http >= 300) {
+            $fetchError = "SeatGeek fetch failed (http: $http, err: $curlErr)";
+            error_log("[resultat.php] $fetchError for $url");
+        } else {
+            $sk = @json_decode($body, true);
+            if (!is_array($sk)) {
+                $fetchError = "SeatGeek returned invalid JSON";
+                error_log("[resultat.php] invalid JSON from SeatGeek: " . substr($body, 0, 1000));
+            } else {
+             
+                $eventData = map_seatgeek_for_resultat($sk);
+                
+                $eventData['id'] = 'sk:' . $skId;
+            }
+        }
+    }
+} else {
+   
+    if ($tmId !== '') {
+        $apiKey = getenv('TM_API_KEY');
+        if (!$apiKey) {
+            $fetchError = "TM_API_KEY missing";
+            error_log("[resultat.php] $fetchError");
+        } else {
+            $url = "https://app.ticketmaster.com/discovery/v2/events/" . rawurlencode($tmId) . ".json?apikey=" . rawurlencode($apiKey);
+            list($body, $http, $curlErr) = http_get($url, 10);
+            if ($body === false || $http < 200 || $http >= 300) {
+                $fetchError = "Ticketmaster fetch failed (http: $http, err: $curlErr)";
+                error_log("[resultat.php] $fetchError for $url");
+            } else {
+                $ev = @json_decode($body, true);
+                if (!is_array($ev)) {
+                    $fetchError = "Invalid JSON or empty response from Ticketmaster";
+                    error_log("[resultat.php] json decode failed for $url : raw=" . substr($body, 0, 1000));
+                } else {
+                    $eventData = $ev;
+                  
+                    if (empty($eventData['id'])) $eventData['id'] = $tmId;
+                }
+            }
+        }
+    } else {
+        $fetchError = "No event id provided";
+    }
+}
+
 $priceInfo = ['display' => 'Prix non renseigné', 'estimated' => true];
 if (is_array($eventData)) {
-    // this will return real price if present or generated fallback if not
+ 
     $priceInfo = get_price_display_for_event($eventData);
 } else {
-    // eventData missing -> create deterministic estimate from event id so user sees a price
+ 
     if ($eventId) {
         $det = generate_deterministic_price($eventId, 25, 70);
         $priceInfo = ['display' => format_money_eur($det), 'estimated' => true, 'value' => $det, 'currency' => 'EUR'];
     }
 }
 
-// 🔗 URL absolue vers form.php
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $baseUrl = $scheme . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/';
 $formBaseUrl = $baseUrl . 'form.php';
+
 ?>
 <!doctype html>
 <html lang="fr">
@@ -80,15 +209,22 @@ $formBaseUrl = $baseUrl . 'form.php';
   <link rel="stylesheet" href="/public/css/resultat.css">
   <style>
     .estimated-badge { display:inline-block; background:#ffecb3; color:#6b4d00; padding:2px 6px; border-radius:4px; font-size:0.75rem; margin-left:8px; }
+    .source-badge { display:inline-block; background:#222; color:#fff; padding:2px 6px; border-radius:4px; font-size:0.7rem; margin-left:8px; }
   </style>
 </head>
-<body>
 
+<?php include __DIR__ . '/../includes/header.php'; ?>
 <div class="event-page">
 
   <div class="event-main">
     <div class="event-info">
-      <h1 id="event-title"><?= h($eventData['name'] ?? ('Événement #' . ($eventId ?: '')) ) ?></h1>
+      <h1 id="event-title"><?= h($eventData['name'] ?? ('Événement #' . ($eventId ?: '')) ) ?>
+        <?php if (isset($eventData['_raw_seatgeek']) || (isset($rawId) && stripos($rawId, 'sk:') === 0)): ?>
+          <span class="source-badge">SeatGeek</span>
+        <?php elseif (isset($eventData['_source']) && $eventData['_source'] === 'tm'): ?>
+          <span class="source-badge">Ticketmaster</span>
+        <?php endif; ?>
+      </h1>
 
       <p id="event-price" class="event-price">
         <?= h($priceInfo['display']) ?>
@@ -102,49 +238,53 @@ $formBaseUrl = $baseUrl . 'form.php';
 
       <p id="event-description" class="event-description"><?= h($eventData['info'] ?? $eventData['pleaseNote'] ?? '') ?></p>
 
-      <!-- Bouton RÉSERVER -->
       <a
-        href="<?= h($formBaseUrl . '?id=' . urlencode($eventId)); ?>"
+        href="<?= h($formBaseUrl . '?id=' . urlencode($rawId)); ?>"
         id="reserve-btn"
         class="reserve-btn">
         RÉSERVER
       </a>
     </div>
 
-    <div class="event-image">
-      <img id="event-image" src="<?= h($eventData['images'][0]['url'] ?? '') ?>" alt="Image événement">
+    <div class="event-side">
+      <div class="event-image">
+        <img id="event-image" src="<?= h($eventData['images'][0]['url'] ?? '') ?>" alt="Image événement">
+      </div>
+      <div id="event-map" class="event-map"></div>
     </div>
   </div>
 
   <section class="invited-artists">
     <h2>Artistes invités</h2>
     <div id="invited-list" class="invited-list">
-      <!-- rempli par JS -->
+
     </div>
   </section>
 </div>
+<?php 
 
-<?php include __DIR__ . '/../includes/footer.php'; ?>
+$gglurl = "https://maps.googleapis.com/maps/api/js?key=" . rawurlencode($googleapi) . "&callback=onGoogleMapsLoaded&loading=async" ;
+?>
 
 <script>
-  // expose server values to JS
-  window.EVENT_ID = <?= json_encode($eventId) ?>;
+  
+  window.EVENT_ID = <?= json_encode($rawId) ?>;
   window.EVENT_DATA = <?= json_encode($eventData) ?>;
   window.EVENT_PRICE = <?= json_encode($priceInfo) ?>;
+  window.EVENT_SOURCE = <?= json_encode($source) ?>;
   window.FORM_BASE_URL = <?= json_encode($formBaseUrl) ?>;
 </script>
 
-<!-- main client script -->
 <script src="/public/js/resultat.js"></script>
+<script src="<?= $gglurl ?>" async></script>
 
-<!-- Small defensive script: reapply server price after other scripts run -->
 <script>
+  
   window.addEventListener('load', function(){
     try {
       var serverPrice = <?= json_encode($priceInfo) ?>;
       var el = document.getElementById('event-price');
       if (!el) return;
-      // always set server-side display (prevents client scripts from accidentally removing it)
       el.textContent = serverPrice.display || el.textContent || '';
       if (serverPrice.estimated) {
         var span = document.createElement('span');
@@ -157,7 +297,5 @@ $formBaseUrl = $baseUrl . 'form.php';
       console.warn('Reapply server price failed', e);
     }
   });
-</script>
-
-</body>
-</html>
+</script> 
+<?php include __DIR__ . '/../includes/footer.php'; ?>

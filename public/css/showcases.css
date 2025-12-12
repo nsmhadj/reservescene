@@ -1,4 +1,4 @@
-/* showcases.css — more spacing + slightly taller images */
+
 .showcase-block {
   margin-bottom: 32px;
   padding: 8px 0;
@@ -6,7 +6,6 @@
   box-sizing: border-box;
 }
 
-/* Title: centered, larger, with more gap to the row */
 .showcase-title {
   display: block;
   width: 100%;
@@ -18,7 +17,6 @@
   line-height: 1.2;
 }
 
-/* Row: increased gap and centered content */
 .showcase-row {
   display: flex !important;
   gap: 18px !important;
@@ -27,11 +25,10 @@
   align-items: flex-start !important;
 }
 
-/* Item: slightly taller and proportionate */
 .showcase-item {
   flex: 0 0 160px;
   width: 160px;
-  height: 200px;              /* increased height */
+  height: 200px;             
   border-radius: 10px;
   overflow: hidden;
   background: #f8f8f8;
@@ -42,21 +39,38 @@
   box-shadow: 0 4px 14px rgba(0,0,0,0.04);
 }
 
-/* Hover subtle lift */
-.showcase-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+.showcase-item > a,
+.showcase-item > .link,
+.showcase-item > .showcase-link {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-/* Image fills the taller area */
-.showcase-item img {
+.showcase-item > a > img,
+.showcase-item > .link > img,
+.showcase-item > .showcase-link > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-/* Responsive: keep images a bit smaller on narrow screens */
+ 
+
+.showcase-item img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block;
+  flex-shrink: 0;
+}
+.showcase-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+
 @media (max-width: 1000px) {
   .showcase-item { flex: 0 0 150px; width: 150px; height: 180px; }
 }

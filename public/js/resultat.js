@@ -1,4 +1,4 @@
-// resultat.js (updated to respect server-side price when present)
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const eventId = window.EVENT_ID;
@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // If server already provided EVENT_DATA, we can use it directly
   if (!eventData) {
     fetch(`/src/api/event.php?id=${eventId}`)
       .then(res => res.json())
@@ -27,10 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupReviews(eventId);
 });
 
-/**
- * Remplit les infos de la page avec les données de l'événement
- * Respecte la valeur window.EVENT_PRICE si elle est fournie côté serveur.
- */
+
 function fillEventData(eventId, data) {
   if (!data) return;
 
@@ -62,13 +58,13 @@ function fillEventData(eventId, data) {
     address = parts.join(" · ");
   }
 
-  // --- Price: prefer server-side computed EVENT_PRICE if present ---
+
   const serverPrice = window.EVENT_PRICE;
   if (serverPrice && serverPrice.display) {
     if (priceElt) priceElt.textContent = serverPrice.display;
-    // optionally show "Estimation" badge handled by server HTML; JS does not need to add it
+    
   } else {
-    // no server-side price available, try to compute from data.priceRanges/offers
+ 
     let priceText = "";
     const prArr = Array.isArray(data.priceRanges) ? data.priceRanges : [];
     if (prArr.length > 0) {
@@ -130,10 +126,10 @@ function fillEventData(eventId, data) {
     imgElt.alt = name;
   }
 
-  // --- Bouton RÉSERVER → vers form.php ---
+
   if (btnElt) {
     const currentPath = window.location.pathname;
-    const dir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1); // dossier actuel
+    const dir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1); 
     const formUrl = window.location.origin + dir + 'form.php';
 
     const params = new URLSearchParams({
@@ -181,9 +177,7 @@ function fillEventData(eventId, data) {
   }
 }
 
-/**
- * Format "YYYY-MM-DD" en français
- */
+
 function formatDateFr(dateStr) {
   const d = new Date(dateStr);
   if (isNaN(d)) return dateStr;
@@ -296,4 +290,133 @@ function setupReviews(eventId) {
     textArea.value = "";
     renderReviews();
   });
+}
+// --- Google Maps state ---
+let gMapsReady = false;
+let gMapInstance = null;
+let gMapMarker = null;
+let pendingEventData = null;
+
+// Appelée par le script Google Maps (callback=onGoogleMapsLoaded dans resultat.php)
+window.onGoogleMapsLoaded = function onGoogleMapsLoaded() {
+  gMapsReady = true;
+  if (pendingEventData) {
+    setupMapFromEvent(pendingEventData);
+  }
+};
+document.addEventListener("DOMContentLoaded", () => {
+  const eventId = window.EVENT_ID;
+  let eventData = window.EVENT_DATA;
+
+  if (!eventId) {
+    console.error("Aucun id d'événement fourni");
+    return;
+  }
+
+  if (!eventData) {
+    fetch(`/src/api/event.php?id=${eventId}`)
+      .then(res => res.json())
+      .then(data => {
+        eventData = data;
+        fillEventData(eventId, data);
+
+        // ➜ on mémorise pour la carte
+        pendingEventData = data;
+        if (gMapsReady) {
+          setupMapFromEvent(data);
+        }
+      })
+      .catch(err => {
+        console.error("Erreur de récupération de l'événement", err);
+      });
+  } else {
+    fillEventData(eventId, eventData);
+
+    //  même chose si les données viennent du serveur
+    pendingEventData = eventData;
+    if (gMapsReady) {
+      setupMapFromEvent(eventData);
+    }
+  }
+
+  setupReviews(eventId);
+});
+/**
+ * Configure la carte Google Maps à partir des données de l'événement
+ */
+function setupMapFromEvent(data) {
+  if (!data) return;
+  const mapContainer = document.getElementById("event-map");
+  if (!mapContainer) return;
+  if (!window.google || !google.maps) {
+    console.warn("Google Maps pas encore prêt");
+    return;
+  }
+
+  const venue = data?._embedded?.venues?.[0];
+  if (!venue) {
+    console.warn("Pas de lieu dans les données de l'événement");
+    return;
+  }
+
+  // --- Adresse complète pour affichage / géocodage ---
+  const addrParts = [];
+  if (venue.address?.line1) addrParts.push(venue.address.line1);
+  if (venue.postalCode) addrParts.push(venue.postalCode);
+  if (venue.city?.name) addrParts.push(venue.city.name);
+  if (venue.country?.name) addrParts.push(venue.country.name);
+  const fullAddress = addrParts.join(", ");
+
+  // --- On tente d'abord avec latitude/longitude Ticketmaster ---
+  let lat = parseFloat(venue.location?.latitude);
+  let lng = parseFloat(venue.location?.longitude);
+
+  if (!isNaN(lat) && !isNaN(lng)) {
+    initOrUpdateMap(lat, lng, fullAddress || venue.name || "Lieu du concert");
+    return;
+  }
+
+
+  if (!fullAddress) {
+    console.warn("Impossible de géocoder : adresse vide");
+    return;
+  }
+
+  const geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ address: fullAddress }, (results, status) => {
+    if (status === "OK" && results[0]) {
+      const loc = results[0].geometry.location;
+      initOrUpdateMap(loc.lat(), loc.lng(), fullAddress);
+    } else {
+      console.warn("Geocoding échoué :", status);
+    }
+  });
+}
+
+
+function initOrUpdateMap(lat, lng, title) {
+  const mapContainer = document.getElementById("event-map");
+  if (!mapContainer) return;
+
+  const center = { lat, lng };
+
+  if (!gMapInstance) {
+    gMapInstance = new google.maps.Map(mapContainer, {
+      center,
+      zoom: 15,
+    });
+  } else {
+    gMapInstance.setCenter(center);
+  }
+
+  if (!gMapMarker) {
+    gMapMarker = new google.maps.Marker({
+      position: center,
+      map: gMapInstance,
+      title: title || "",
+    });
+  } else {
+    gMapMarker.setPosition(center);
+    if (title) gMapMarker.setTitle(title);
+  }
 }

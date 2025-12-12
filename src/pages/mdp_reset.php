@@ -3,7 +3,7 @@ session_start();
 $message = "";
 $success = "";
 
-/* === Connexion DB === */
+
 require_once __DIR__ . '/../../config/database.php';
 
 $prefill_email = isset($_GET['email']) ? $_GET['email'] : '';
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif (strlen($new_password) < 8) {
                 $message = "Le mot de passe doit contenir au moins 8 caractères.";
             } else {
-                // Mise à jour du mot de passe et suppression du code
+             
                 $new_hash = password_hash($new_password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("UPDATE client SET mdp_client = :mdp, reset_code = NULL, reset_expires = NULL WHERE clef = :clef");
                 $stmt->execute([
@@ -62,13 +62,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'clef' => $allowed['clef']
                 ]);
 
-                // supprime la permission de reset dans la session
+                
                 unset($_SESSION['password_reset_allowed']);
 
-                // message de succès + redirection friendly (JS)
+               
                 $success = "Mot de passe modifié avec succès. Vous allez être redirigé vers la page de connexion dans quelques secondes.";
-                // NOTE: on n'utilise pas header() ici pour laisser l'utilisateur lire le message ;
-                // la redirection sera faite côté client (JavaScript) ci-dessous.
+                
             }
         }
     }
@@ -96,11 +95,10 @@ include __DIR__ . '/../includes/header.php';
         </div>
       </div>
 
-      <!-- Redirection automatique après 4 secondes -->
       <script>
         (function(){
-          // sécurité : use location.replace to avoid keeping reset page in history
-          var delay = 4000; // ms
+          
+          var delay = 4000; 
           setTimeout(function(){
             window.location.replace('connexion.php?reset=success');
           }, delay);
@@ -108,7 +106,7 @@ include __DIR__ . '/../includes/header.php';
       </script>
 
     <?php
-      // Si succès, on n'affiche pas les formulaires (fin)
+    
     else:
       $show_reset_form = isset($_SESSION['password_reset_allowed']);
       if ($show_reset_form):
@@ -142,7 +140,7 @@ include __DIR__ . '/../includes/header.php';
       <p style="margin-top:6px;"><a href="mdp_oubliee.php">Demander un nouveau code</a></p>
     <?php endif; ?>
 
-    <?php endif; // fin else success ?>
+    <?php endif; ?>
 
   </div>
 </main>

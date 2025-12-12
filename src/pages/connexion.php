@@ -2,27 +2,20 @@
 session_start();
 $message = "";
 
-// Load database configuration from centralized config file
+
 require_once __DIR__ . '/../../config/database.php';
 
-/*
- * Redirect handling:
- * - Accept redirect from GET (when user was forwarded here) or POST (when form submitted)
- * - Allow only local paths (no scheme://host). This prevents open-redirect attacks.
- * - Keep the redirect value and output it in a hidden form field so it survives the POST.
- */
 $defaultRedirect = '/index.php';
 $redirect = $defaultRedirect;
 
 if (!empty($_REQUEST['redirect'])) {
-    // rawurldecode so encoded values like form.php%3Fid%3D123 become usable
+  
     $candidate = rawurldecode($_REQUEST['redirect']);
-    // reject absolute URLs with a scheme (http:// or https://) or protocol-relative (//)
+   
     if (preg_match('#^[a-zA-Z][a-zA-Z0-9+\-.]*://#', $candidate) === 0 && strpos($candidate, '//') === false) {
-        // remove newlines to avoid header injection
+        
         $candidate = str_replace(["\r", "\n"], '', $candidate);
-        // normalize simple relative paths: keep as given (example: form.php?id=123)
-        // optionally you could prefix with base path if needed.
+      
         $redirect = $candidate !== '' ? $candidate : $defaultRedirect;
     } else {
         error_log('connexion.php: rejected redirect candidate: ' . $candidate);
@@ -49,12 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($user['etat_compte'] !== 'actif') {
                 $message = "Votre compte n'est pas actif.";
             } elseif (password_verify($password, $user['mdp_client'])) {
-                // ✅ Connexion OK => on enregistre la session
+               
                 session_regenerate_id(true);
-                $_SESSION['user']       = $user['login'];        // utilisé pour savoir s'il est connecté
-                $_SESSION['user_email'] = $user['adresse_mail']; // pratique pour préremplir les formulaires
-
-                // Use validated redirect (from above). Ensure header uses a safe value.
+                $_SESSION['user']       = $user['login'];        
+                $_SESSION['user_email'] = $user['adresse_mail'];
                 header('Location: ' . $redirect);
                 exit;
             } else {
@@ -66,9 +57,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReserveScene — Connexion</title>
+  <meta name="description" content="ReserveScene est une plateforme de réservation de billets pour concerts, spectacles et événements culturels. Trouve et réserve facilement tes places.">
+
+
 
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
+  
 <main style="display:flex;justify-content:center;align-items:center;min-height:80vh;">
   <div class="auth-card" role="main" aria-labelledby="auth-title" style="width:100%;max-width:520px;background:#fff;border:1px solid #e9e9e9;border-radius:6px;padding:22px 28px;box-shadow:0 6px 20px rgba(33,33,33,0.06);">
     <h2 id="auth-title" style="font-size:16px;font-weight:600;color:#222;">Connexion</h2>
@@ -80,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <?php endif; ?>
 
     <form method="post" autocomplete="off" novalidate>
-      <!-- Preserve redirect across the POST -->
+    
       <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>">
 
       <div style="margin-bottom:14px; position:relative;">
@@ -105,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </main>
 
 <script>
-// Vérification AJAX du login/email
+
 document.getElementById("username").addEventListener("blur", function () {
     const username = this.value.trim();
     const info = document.getElementById("userCheck");

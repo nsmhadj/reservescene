@@ -1,4 +1,4 @@
-/* Styles pour la page de profil modernisée */
+
 body {
   margin: 0;
   padding: 0;
@@ -7,7 +7,7 @@ body {
   color: #222;
 }
 
-/* Mise en page globale */
+
 .profile-page {
   max-width: 750px;
   margin: 60px auto;
@@ -21,7 +21,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Cartes */
+
 .profile-card,
 .recharge-card {
   background: #fff;
@@ -41,7 +41,7 @@ body {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Titres */
+
 .profile-card h2 {
   margin: 0 0 20px;
   font-size: 2rem;
@@ -57,7 +57,7 @@ body {
   align-items: center;
 }
 
-/* Lignes d'info */
+
 .info-row {
   display: flex;
   justify-content: space-between;
@@ -91,7 +91,7 @@ body {
   color: #00b894;
 }
 
-/* Bouton réservation */
+
 .reservations-link {
   display: inline-block;
   margin-top: 20px;
@@ -109,7 +109,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Messages */
+
 .recharge-message {
   margin-bottom: 15px;
   padding: 12px;
@@ -129,7 +129,7 @@ body {
   border: 1px solid #f5c6cb;
 }
 
-/* Formulaires */
+
 .edit-form {
   display: flex;
   flex-direction: column;

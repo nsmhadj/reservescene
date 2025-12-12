@@ -1,21 +1,15 @@
 <?php
 session_start();
 
-// 🔐 Vérif connexion
 if (empty($_SESSION['user'])) {
     header('Location: connexion.php?redirect=' . urlencode('reservation.php'));
     exit;
 }
-
-// Load database configuration
 require_once __DIR__ . '/../../config/database.php';
 
-// 🧾 Téléchargement billet
-// 🧾 Téléchargement billet EN PDF + envoi mail avec PDF en pièce jointe
 if (isset($_GET['download'])) {
     $id = (int) $_GET['download'];
 
-    // Récupération de la réservation qui appartient à l'utilisateur connecté
     $stmt = $pdo->prepare("
         SELECT *
         FROM reservations
@@ -32,15 +26,11 @@ if (isset($_GET['download'])) {
         die('Billet introuvable.');
     }
 
-    // URL QR code (API externe)
     $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($res['qr_text']);
 
-    // URL du logo (par ex. logo.png dans le même dossier que reservation.php)
     $scheme  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $baseUrl = $scheme . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/';
-    $logoUrl = $baseUrl . 'logo.png';  // mets ton logo ici
-
-    // HTML du billet (version "jolie")
+    $logoUrl = $baseUrl . 'logo.png'; 
     $html = '
     <html>
     <head>
@@ -184,25 +174,20 @@ if (isset($_GET['download'])) {
     </html>
     ';
 
-    // 🔹 Charger les libs
     require __DIR__ . '/../../vendor/autoload.php';
 
-    // 1) Génération du PDF avec Dompdf
     $dompdf = new Dompdf\Dompdf([
-        'isRemoteEnabled' => true, // autoriser le chargement du QR + logo
+        'isRemoteEnabled' => true, 
     ]);
 
     $dompdf->loadHtml($html, 'UTF-8');
     $dompdf->setPaper('A4', 'portrait');
     $dompdf->render();
     $pdfOutput = $dompdf->output();
-
-    // 2) Envoi du mail avec le PDF en pièce jointe
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
     try {
-        // Sur alwaysdata, tu peux rester en mode mail() classique :
-        $mail->isMail(); // utilise la fonction mail() de PHP
+        $mail->isMail();
 
         $mail->setFrom('no-reply@reservescene.alwaysdata.net', 'Billetterie');
         $mail->addAddress($res['main_email'], $res['main_firstname'] . ' ' . $res['main_lastname']);
@@ -216,19 +201,15 @@ if (isset($_GET['download'])) {
                <strong>' . htmlspecialchars($res['event_title']) . '</strong>.</p>
             <p>Vous pouvez aussi retrouver vos billets à tout moment dans la rubrique 
                <a href="' . htmlspecialchars($baseUrl . 'reservation.php') . '">Mes réservations</a>.</p>
-            <p>Bonne soirée 🎵</p>
+            <p>Bonne soirée </p>
         ';
-
-        // Pièce jointe PDF (à partir de la chaîne générée)
         $mail->addStringAttachment($pdfOutput, 'billet-' . $res['id'] . '.pdf', 'base64', 'application/pdf');
 
         $mail->send();
     } catch (Exception $e) {
-        // En cas d'erreur mail, on loggue simplement (mais on laisse quand même télécharger le PDF)
         error_log('Erreur envoi mail billet : ' . $mail->ErrorInfo);
     }
 
-    // 3) Envoi du PDF au navigateur (téléchargement)
     $filename = 'billet-' . $res['id'] . '.pdf';
     header('Content-Type: application/pdf');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -238,7 +219,6 @@ if (isset($_GET['download'])) {
 }
 
 
-// 📜 Liste des réservations de ce login
 $stmt = $pdo->prepare("
     SELECT *
     FROM reservations
@@ -258,7 +238,7 @@ $success = isset($_GET['success']);
     <link rel="stylesheet" href="/public/css/reservation.css">
     <script defer src="/public/js/reservation.js"></script>
 </head>
-<body>
+
   <?php include  __DIR__ . '/../includes/header.php'; ?>
     <main class="reservation-page">
         <header class="reservation-header">
@@ -312,5 +292,4 @@ $success = isset($_GET['success']);
     </main>
 <?php include_once __DIR__ . '/../includes/footer.php'; ?>
 
-</body>
-</html>
+

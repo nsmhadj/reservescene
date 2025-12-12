@@ -1,12 +1,10 @@
-/* -----------------------------
-   FOOTER GLOBAL
------------------------------ */
+
 .site-footer {
     background-color: #fff;
     border-top: 1px solid #e0e0e0;
     padding: 40px 80px 20px;
     font-family: "Arial", sans-serif;
-    color: #333;
+    color: #0c0c0c;
 }
 
 .footer-container {
@@ -16,9 +14,7 @@
     gap: 40px;
 }
 
-/* -----------------------------
-   LOGO RESERVESCENE
------------------------------ */
+
 .footer-logo {
     display: flex;
     flex-direction: column;
@@ -26,18 +22,15 @@
     margin-bottom: 25px;
 }
 
-/* ✅ Taille corrigée du logo image */
+
 .logo-img {
-    max-height: 60px !important; /* limite la hauteur */
-    width: auto !important;      /* garde les proportions */
+    max-height: 60px !important; 
+    width: auto !important;      
     display: block;
     margin: 0 auto;
     object-fit: contain;
 }
 
-/* -----------------------------
-   RÉSEAUX SOCIAUX
------------------------------ */
 .footer-socials {
     display: flex;
     justify-content: center;
@@ -55,9 +48,7 @@
     transform: scale(1.2);
 }
 
-/* -----------------------------
-   COLONNES LIENS
------------------------------ */
+
 .footer-col {
     flex: 1 1 200px;
     min-width: 200px;
@@ -91,21 +82,15 @@
     color: #e74c3c;
 }
 
-/* -----------------------------
-   BAS DE PAGE
------------------------------ */
 .footer-bottom {
     text-align: center;
     margin-top: 40px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #ffffff;
     padding-top: 15px;
     font-size: 13px;
-    color: #777;
+    color: #242424;
 }
 
-/* -----------------------------
-   RESPONSIVE (mobile)
------------------------------ */
 @media (max-width: 768px) {
     .footer-container {
         flex-direction: column;

@@ -1,0 +1,122 @@
+
+.inscription-wrapper {
+    min-height: 75vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px;
+    background: #f7f7f7;
+}
+
+.inscription-card {
+    width: 100%;
+    max-width: 520px;
+    background: #fff;
+    padding: 28px;
+    border-radius: 14px;
+    box-shadow: 0 12px 22px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eee;
+}
+
+.inscription-card h2 {
+    margin-bottom: 18px;
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 15px;
+    transition: border-color .2s ease;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #000;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* === Error message === */
+.form-error {
+    background: #ffe5e5;
+    color: #b30000;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* === Live validation === */
+.live-info {
+    display: block;
+    font-size: 13px;
+    margin-top: -10px;
+    margin-bottom: 14px;
+    min-height: 16px;
+}
+
+.live-info.good {
+    color: #1b9c24;
+}
+
+.live-info.bad {
+    color: #c82121;
+}
+
+/* === Captcha === */
+.captcha-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+/* === Button === */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.btn-submit:hover {
+    background: #000;
+}
+
+
+@media (max-width: 900px) {
+    .inscription-card {
+        padding: 22px;
+    }
+}

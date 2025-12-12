@@ -1,18 +1,11 @@
 <?php
-/**
- * helpers.php
- * Fonctions partagées. Inclure via include_once __DIR__ . '/../src/includes/helpers.php'; (from public/)
- * or include_once __DIR__ . '/../includes/helpers.php'; (from src/pages/)
- */
 
-// h()
 if (!function_exists('h')) {
     function h($s) {
         return htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 }
 
-// fetch_with_cache()
 if (!function_exists('fetch_with_cache')) {
     function fetch_with_cache($url, $ttl = 60) {
         $cacheFile = sys_get_temp_dir() . '/tm_shared_' . md5($url) . '.json';
@@ -79,10 +72,7 @@ if (!function_exists('get_artist_name')) {
     }
 }
 
-/**
- * Extract price info from Ticketmaster event object (if present).
- * Returns array: ['min' => float|null, 'max' => float|null, 'currency' => string|null]
- */
+
 if (!function_exists('extract_event_price')) {
     function extract_event_price(array $ev) : array {
         $out = ['min' => null, 'max' => null, 'currency' => null];
@@ -114,12 +104,7 @@ if (!function_exists('extract_event_price')) {
     }
 }
 
-/**
- * Generate a deterministic "random" price for an event id
- * - seed: a string (event id) so price is stable across reloads
- * - min/max: integers (e.g. 25, 70)
- * Returns float (2 decimals) e.g. 24.99
- */
+
 if (!function_exists('generate_deterministic_price')) {
     function generate_deterministic_price(string $seed, int $min = 25, int $max = 70) : float {
         $seed = (string)$seed;
@@ -129,7 +114,6 @@ if (!function_exists('generate_deterministic_price')) {
         $range = max(1, $max - $min);
         $intPart = $min + ($hashInt % $range);
 
-        // realistic endings with weights embedded by selection
         $endings = [0.99, 0.50, 0.00, 0.90];
         $idx = ($hashInt >> 8) % count($endings);
         $fraction = $endings[$idx];
@@ -143,9 +127,7 @@ if (!function_exists('generate_deterministic_price')) {
     }
 }
 
-/**
- * Format number to French euro display: 24,99 €
- */
+
 if (!function_exists('format_money_eur')) {
     function format_money_eur($amount) : string {
         if ($amount === null || $amount === '') return '';
@@ -154,10 +136,6 @@ if (!function_exists('format_money_eur')) {
     }
 }
 
-/**
- * Return a display object for an event price:
- * ['display' => string (already formatted), 'estimated' => bool, 'value' => float, 'currency' => string]
- */
 if (!function_exists('get_price_display_for_event')) {
     function get_price_display_for_event(array $ev) : array {
         $ex = extract_event_price($ev);
@@ -168,7 +146,7 @@ if (!function_exists('get_price_display_for_event')) {
             return ['display' => $display, 'estimated' => false, 'value' => $value, 'currency' => $currency];
         }
 
-        // fallback deterministic random based on id
+      
         $seed = $ev['id'] ?? ($ev['name'] ?? uniqid('evt_'));
         $price = generate_deterministic_price((string)$seed, 25, 70);
         $display = format_money_eur($price);

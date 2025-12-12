@@ -2,7 +2,6 @@
 session_start();
 $message = "";
 
-// Load database configuration
 require_once __DIR__ . '/../../config/database.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -12,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($username === '' || $password === '') {
         $message = "Veuillez fournir un nom d'utilisateur ou email et un mot de passe.";
     } else {
-        //chercher le client par login ou adresse_mail
+      
         $stmt = $pdo->prepare("
             SELECT login, adresse_mail, mdp_client, etat_compte
             FROM client
@@ -78,11 +77,11 @@ h2 { text-align:center; }
 session_start();
 $message = "";
 
-// === Configuration de la base de données AlwaysData ===
+
 $host = "mysql-reservescene.alwaysdata.net";
 $dbname = "reservescene_bd";
 $dbuser = "REMOVED_USER";
-$dbpass = "REMOVED_PASS"; // 🔒 Remplace par ton mot de passe MySQL AlwaysData
+$dbpass = "REMOVED_PASS"; 
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $dbuser, $dbpass, [
@@ -99,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($username === '' || $password === '') {
         $message = "Veuillez fournir un nom d'utilisateur (ou email) et un mot de passe.";
     } else {
-        // 🔍 On cherche le client par login OU adresse_mail
+      
         $stmt = $pdo->prepare("
             SELECT login, adresse_mail, mdp_client, etat_compte
             FROM client
@@ -137,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <title>Connexion</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-/* Reset léger */
+
 * { box-sizing: border-box; }
 
 body {
@@ -220,12 +219,12 @@ button[type="submit"]:hover {
   opacity: 0.94;
 }
 
-/* Message d'erreur centré */
+
 .message {
   text-align: center;
   margin-bottom: 10px;
   font-size: 13px;
-  color: #d9534f; /* rouge */
+  color: #d9534f; 
 }
 
 /* Liens bas */
@@ -245,7 +244,7 @@ button[type="submit"]:hover {
   text-decoration: underline;
 }
 
-/* petit style responsive */
+
 @media (max-width:420px) {
   .auth-card { padding: 16px; }
 }
@@ -263,7 +262,7 @@ button[type="submit"]:hover {
   <form method="post" autocomplete="off" novalidate>
     <div class="form-row">
       <label for="username">E-mail</label>
-      <!-- placeholder 'Valeur' selon ton image -->
+      
       <input id="username" type="text" name="username" placeholder="Nom d'utilisateur ou email" required>
     </div>
 

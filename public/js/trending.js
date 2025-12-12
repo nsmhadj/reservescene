@@ -1,14 +1,12 @@
-// trending.js - early-exit if server rendered content exists
-// (Remplace ton trending.js existant dans nassim)
+
 const TRENDING_API_URL = 'events.php?classificationName=music';
 const trendingList = document.getElementById('trendingList');
 
-// Si le server a déjà rendu des enfants dans #trendingList,
-// on ne touche pas au contenu pour préserver le style/structure existants.
+
 if (trendingList && trendingList.children.length) {
   console.log('[trending.js] contenu déjà rendu côté serveur — script arrêté pour préserver la structure.');
 } else {
-  // shuffle helper
+ 
   function shuffle(arr) {
     if(!Array.isArray(arr)) return [];
     const a = arr.slice();
@@ -60,7 +58,7 @@ if (trendingList && trendingList.children.length) {
 
     card.innerHTML = `
       <div class="trending-card__imgwrap">
-        ${imgUrl ? `<img src="${imgUrl}" alt="${title}" class="trending-card__img">` : ''}
+        ${imgUrl ? `<img src="${imgUrl}" alt="concert image" class="trending-card__img">` : ''}
       </div>
       <div class="trending-card__body">
         <h3 class="trending-card__title">${title}</h3>
@@ -86,13 +84,13 @@ if (trendingList && trendingList.children.length) {
 
       const events = Array.isArray(data?.events) ? data.events : [];
 
-      // 1) on garde que la musique
+     
       const musicEvents = events.filter(isMusicEvent);
 
-      // 2) on mélange pour éviter de prendre toujours les 3 premiers
+     
       const shuffled = shuffle(musicEvents);
 
-      // 3) on déduplique par artiste
+  
       const seenArtists = new Set();
       const uniqueByArtist = [];
 

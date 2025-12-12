@@ -110,7 +110,7 @@
 
   <div class="blog-grid">
 
-    <!-- Article 1 -->
+   
     <div class="blog-card">
       <img src="/public/images/concert.jpg" alt="Concert de musique">
       <div class="blog-content">
@@ -122,7 +122,6 @@
       </div>
     </div>
 
-    <!-- Article 2 -->
     <div class="blog-card">
       <img src="/public/images/theatre.jpg" alt="Spectacle de théâtre">
       <div class="blog-content">
@@ -134,7 +133,7 @@
       </div>
     </div>
 
-    <!-- Article 3 -->
+
     <div class="blog-card">
       <img src="/public/images/comedy.jpg" alt="Comédie en live">
       <div class="blog-content">
@@ -146,7 +145,7 @@
       </div>
     </div>
 
-    <!-- Ajoute autant d'articles que nécessaire -->
+    
     
   </div>
 </section>

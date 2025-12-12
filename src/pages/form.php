@@ -1,21 +1,21 @@
 <?php
 session_start();
 
-// 1) Infos événement (GET depuis resultat.php)
+
 $eventId    = $_GET['id']    ?? null;
 $eventTitle = $_GET['title'] ?? 'Événement';
 $eventDate  = $_GET['date']  ?? '';
 $eventVenue = $_GET['venue'] ?? '';
 
-// Charger helpers pour la gestion des prix et du formatage
+
 require_once __DIR__ . '/../includes/helpers.php';
 
-// Déterminer le prix de l'évènement : si passé en GET, on l'utilise, sinon calcul déterministe
+
 $eventPrice = null;
 if (isset($_GET['price']) && is_numeric($_GET['price'])) {
     $eventPrice = (float)$_GET['price'];
 } else {
-    // utilisation d'une fourchette par défaut cohérente avec la recherche
+ 
     $eventPrice = generate_deterministic_price((string)$eventId, 25, 70);
 }
 
@@ -23,12 +23,11 @@ if (!$eventId) {
     die('Aucun évènement sélectionné.');
 }
 
-// Inclure le header commun sur toutes les pages
 include __DIR__ . '/../includes/header.php';
 
-// 2) Vérif connexion via $_SESSION['user'] (comme dans connexion.php)
+
 if (empty($_SESSION['user'])) {
-    // on veut revenir ici après connexion
+ 
     $redirectUrl = 'form.php?' . http_build_query([
         'id'    => $eventId,
         'title' => $eventTitle,
@@ -39,12 +38,10 @@ if (empty($_SESSION['user'])) {
     exit;
 }
 
-// 3) Load database configuration
 require_once __DIR__ . '/../../config/database.php';
 
 $errors = [];
 
-// Valeurs du formulaire
 $holder_lastname  = $_POST['holder_lastname']  ?? '';
 $holder_firstname = $_POST['holder_firstname'] ?? '';
 $holder_email     = $_POST['holder_email']     ?? ($_SESSION['user_email'] ?? '');
@@ -53,7 +50,6 @@ $nb_places        = $_POST['nb_places']        ?? '1';
 $guest_lastname   = $_POST['guest_lastname']   ?? '';
 $guest_firstname  = $_POST['guest_firstname']  ?? '';
 
-// 4) Traitement du POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $holder_lastname  = trim($holder_lastname);
@@ -76,11 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        // Vérifier le solde suffisant
         $nbPlacesInt = (int)$nb_places;
         $totalPrice = $eventPrice * $nbPlacesInt;
 
-        // Récupération du solde de l'utilisateur
         $stmtSolde = $pdo->prepare("SELECT solde FROM client WHERE login = :login LIMIT 1");
         $stmtSolde->execute(['login' => $_SESSION['user']]);
         $soldeData = $stmtSolde->fetch();
@@ -95,14 +89,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $qrText = 'RES-' . time() . '-' . bin2hex(random_bytes(4));
         try {
             $pdo->beginTransaction();
-            // Débiter le solde
+          
             $stmtDebit = $pdo->prepare("UPDATE client SET solde = solde - :amount WHERE login = :login");
             $stmtDebit->execute([
                 'amount' => $totalPrice,
                 'login'  => $_SESSION['user'],
             ]);
 
-            // Insérer la réservation
+        
             $stmtInsert = $pdo->prepare("INSERT INTO reservations (
                 user_login,
                 event_id,
@@ -152,7 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $pdo->commit();
 
-            // Envoi du mail de confirmation
             $to      = $holder_email;
             $subject = "Votre billet pour : " . $eventTitle;
             $qrUrl   = "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=" . urlencode($qrText);

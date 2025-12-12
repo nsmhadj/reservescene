@@ -5,7 +5,7 @@ $message = "";
 /* === Connexion DB === */
 require_once __DIR__ . '/../../config/database.php';
 
-/* Fonction pour générer un code alphanumérique de 6 caractères */
+
 function generateCode($length = 6) {
     $chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $code = '';
@@ -15,7 +15,7 @@ function generateCode($length = 6) {
     return $code;
 }
 
-/* Traitement POST : saisie e-mail */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
 
@@ -26,16 +26,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $message = "Si cette adresse existe, un code vous sera envoyé par e-mail.";
 
-        // Vérifier si l’e-mail existe dans client
+   
         $stmt = $pdo->prepare("SELECT clef, login FROM client WHERE adresse_mail = :email LIMIT 1");
         $stmt->execute(['email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            $code = generateCode(); // 6 caractères alphanumériques
-            $expires_at = time() + 15*60; // 15 minutes
+            $code = generateCode(); 
+            $expires_at = time() + 15*60; 
 
-            // Mettre à jour le code et la date d'expiration
+        
             $update = $pdo->prepare("UPDATE client SET reset_code = :code, reset_expires = :expires WHERE clef = :clef");
             $update->execute([
                 'code' => $code,
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'clef' => $user['clef']
             ]);
 
-            // Envoi du code par mail
+         
             $subject = "Code de réinitialisation de votre mot de passe";
             $body = "Bonjour,\n\nVous avez demandé la réinitialisation de votre mot de passe.\n\n"
                   . "Votre code : " . $code . "\n\n"

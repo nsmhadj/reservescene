@@ -1,9 +1,5 @@
 <?php
-// ----------------------
-// cookies.php
-// ----------------------
 
-// CONFIG COOKIE
 $nom_cookie    = 'consentement_cookies';
 $duree_cookie  = 365 * 24 * 3600;
 $chemin_cookie = '/';
@@ -19,7 +15,7 @@ function definir_cookie($nom, $valeur, $duree, $chemin = '/')
     ]);
 }
 
-// Lecture du cookie
+
 $consentement = null;
 if (isset($_COOKIE[$nom_cookie])) {
     $decode = json_decode($_COOKIE[$nom_cookie], true);
@@ -28,7 +24,7 @@ if (isset($_COOKIE[$nom_cookie])) {
     }
 }
 
-// Traitement du formulaire de gestion
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_consentement'])) {
 
     if ($_POST['action_consentement'] === 'sauver_prefs') {
@@ -93,9 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_consentement']
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des cookies - ReserveScene</title>
 
-    <!-- Feuille de style principale -->
+
     <link rel="stylesheet" href="style.css?v=6">
-    <!-- Feuille de style spécifique cookies -->
+   
     <link rel="stylesheet" href="/public/css/cookies.css?v=5">
 </head>
 
@@ -107,7 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_consentement']
     <section class="cookies-wrapper">
         <h1>Gestion des cookies</h1>
 
-        <!-- Formulaire de préférences -->
         <form method="post" class="cookies-form">
             <p class="cookies-intro">
                 Vous pouvez choisir les catégories de cookies que vous acceptez.
@@ -196,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_consentement']
             </div>
         </form>
 
-        <!-- Tu peux garder ici ton texte juridique / politique de cookies -->
+        
         <div class="cookies-legal">
             <h2>1. Qu’est-ce qu’un cookie&nbsp;?</h2>
             <p>
@@ -235,5 +230,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_consentement']
 
 <?php include(__DIR__ . '/../includes/footer.php'); ?>
 
-</body>
-</html>
+

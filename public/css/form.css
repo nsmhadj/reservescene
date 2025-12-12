@@ -10,7 +10,7 @@ body {
 .form-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 6rem 1.5rem 3rem; /* place pour le header fixe */
+  padding: 6rem 1.5rem 3rem; 
 }
 
 .form-layout {

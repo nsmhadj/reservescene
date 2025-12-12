@@ -1,21 +1,16 @@
-/*
- * recharge.css — styles pour la page de rechargement du solde.
- * Cette feuille vise à conserver l'harmonie graphique du site ReserveScene
- * en reprenant une palette sobre et des cartes épurées similaires à celles
- * des pages de connexion et de profil.
- */
 
-/* Structure principale de la page */
+
+
 .recharge-page {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 4rem 1rem;
-    min-height: calc(100vh - 200px); /* laisse de la place pour l'en-tête et le pied de page */
+    min-height: calc(100vh - 200px);
     background-color: #fdfdfd;
 }
 
-/* Conteneur de la carte de recharge */
+
 .recharge-container {
     background-color: #ffffff;
     border: 1px solid #e5e5e5;
@@ -35,7 +30,7 @@
     text-align: center;
 }
 
-/* Style du formulaire */
+
 .recharge-form {
     display: flex;
     flex-direction: column;
@@ -47,7 +42,7 @@
     color: #555555;
 }
 
-/* Champ de saisie */
+
 .recharge-form input[type="text"] {
     padding: 0.7rem;
     font-size: 1rem;
@@ -64,7 +59,7 @@
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Bouton de soumission : reprend la palette sombre de ReserveScene */
+
 .recharge-button {
     padding: 0.8rem;
     font-size: 1rem;
@@ -82,7 +77,7 @@
     transform: translateY(-2px);
 }
 
-/* Messages de statut */
+
 .recharge-message {
     margin-bottom: 1rem;
     padding: 0.8rem 1rem;

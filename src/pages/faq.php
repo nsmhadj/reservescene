@@ -1,12 +1,15 @@
-<?php include __DIR__ . '/../includes/header.php'; ?>
 <!doctype html>
 <html lang="fr">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FAQ - Reservescene</title>
-  <style>
-    /* ======= Thème noir élégant ======= */
+ 
+ 
+
+ <style>
+
     body {
       font-family: "Poppins", sans-serif;
       background-color: #f5f5f5;
@@ -106,7 +109,7 @@
 </head>
 
 <body>
-
+ <?php include __DIR__ . '/../includes/header.php'; ?>
 <section class="faq">
   <h1>Foire Aux Questions</h1>
 
@@ -147,7 +150,6 @@
 </section>
 
 <script>
-  // Gestion FAQ : ouvrir / fermer les questions
   document.querySelectorAll('.faq-question').forEach((question) => {
     question.addEventListener('click', () => {
       const parent = question.parentNode;
@@ -159,7 +161,6 @@
   });
 </script>
 
-</body>
-</html>
+
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

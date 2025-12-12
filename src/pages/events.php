@@ -1,19 +1,14 @@
 <?php
-/**
- * events.php
- * Fetch up to 20 Ticketmaster events (with images) in JSON format.
- */
+
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
-// ---- CONFIG ----
-// Load API key from environment variable
 $API_KEY  = getenv('TM_API_KEY') ?: '63ukbG5uWxs4cm2VFh7H3JDtN8CGFSPl';
 $BASE_URL = 'https://app.ticketmaster.com/discovery/v2/events.json';
-$SIZE     = 200; // ✅ limit to 20 events
+$SIZE     = 200; 
 $TIMEOUT  = 10;
-// ----------------
+
 
 if (!$API_KEY || $API_KEY === 'YOUR_TICKETMASTER_API_KEY') {
     http_response_code(500);
@@ -21,7 +16,6 @@ if (!$API_KEY || $API_KEY === 'YOUR_TICKETMASTER_API_KEY') {
     exit;
 }
 
-// Build query with forwarded filters
 $params = [
     'apikey' => $API_KEY,
     'size'   => $SIZE,
@@ -35,7 +29,7 @@ foreach ($forward as $k) {
 }
 $url = $BASE_URL . '?' . http_build_query($params);
 
-// Fetch with cURL
+
 $ch = curl_init($url);
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
@@ -68,7 +62,7 @@ if (!$data) {
     exit;
 }
 
-// Extract and limit to 20
+
 $events = $data['_embedded']['events'] ?? [];
 $events = array_slice($events, 0, 200); 
 

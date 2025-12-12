@@ -1,27 +1,23 @@
-/* ---------------------------
-   POLITIQUE DE CONFIDENTIALITÉ - STYLE CLAIR + BLOC SOMBRE
----------------------------- */
 
-/* Fond global */
 body {
-    background-color: #ffffff; /* ✅ fond blanc pour le header */
+    background-color: #ffffff;
+    
     color: #111;
     font-family: "Poppins", sans-serif;
     margin: 0;
     padding: 0;
 }
 
-/* Bloc central noir */
+
 .politique-wrapper {
     max-width: 1000px;
     margin: 80px auto;
     padding: 40px;
-    background-color: #0f0f0f; /* ✅ bloc noir */
+    background-color: #0f0f0f;
     border-radius: 12px;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Titre principal */
 .politique-wrapper h1 {
     font-size: 2.4em;
     text-align: center;
@@ -31,12 +27,12 @@ body {
     letter-spacing: 2px;
 }
 
-/* Sous-titres */
+
 .politique-wrapper h2 {
     color: #ffffff;
     font-size: 1.4em;
     margin-top: 40px;
-    border-left: 4px solid #00ff88; /* ✅ vert clair */
+    border-left: 4px solid #00ff88; 
     padding-left: 10px;
     transition: all 0.3s ease;
 }

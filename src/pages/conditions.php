@@ -1,7 +1,5 @@
 <?php
-// ----------------------
-// conditions.php
-// ----------------------
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -10,14 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conditions générales - ReserveScene</title>
 
-    <!-- Feuille de style principale -->
     <link rel="stylesheet" href="style.css?v=6">
-    <!-- Feuille de style spécifique -->
+ 
     <link rel="stylesheet" href="/public/css/conditions.css?v=3">
 </head>
 <body>
 
-<?php include(__DIR__ . '/../includes/header.php'); ?> <!-- inclusion du header -->
+<?php include(__DIR__ . '/../includes/header.php'); ?>
 
 <main class="page-container">
     <section class="conditions-wrapper">
@@ -55,7 +52,7 @@
     </section>
 </main>
 
-<?php include(__DIR__ . '/../includes/footer.php'); ?> <!-- inclusion du footer -->
+<?php include(__DIR__ . '/../includes/footer.php'); ?>
 
 </body>
 </html>

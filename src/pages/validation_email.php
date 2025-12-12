@@ -2,21 +2,21 @@
 session_start();
 $message = "";
 
-/* === Connexion DB === */
+
 require_once __DIR__ . '/../../config/database.php';
 
-/* === Supprimer comptes expirés en attente === */
+
 $now = time();
 $delete = $pdo->prepare("DELETE FROM client WHERE etat_compte='en_attente' AND reset_expires IS NOT NULL AND reset_expires < :now");
 $delete->execute(['now' => $now]);
 
-/* === Récupérer l'email depuis GET ou session === */
+
 $email = $_GET['email'] ?? ($_SESSION['pending_validation']['email'] ?? null);
 if (!$email) {
     die("Adresse e-mail manquante.");
 }
 
-/* === Traitement du formulaire === */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_input_code = trim($_POST['code'] ?? '');
 

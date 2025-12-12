@@ -31,9 +31,6 @@ if (!$user) {
     exit;
 }
 
-/* ------------------------------------------------------------------
-    TRAITEMENT MODIFICATION PROFIL
---------------------------------------------------------------------*/
 $editMessage = "";
 $editSuccess = false;
 
@@ -98,9 +95,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_profile'])) {
     }
 }
 
-/* ------------------------------------------------------------------
-    TRAITEMENT MODIFICATION MOT DE PASSE
---------------------------------------------------------------------*/
 $passMessage = "";
 $passSuccess = false;
 
@@ -219,14 +213,13 @@ include __DIR__ . '/../includes/header.php';
     </form>
 </section>
 
-<!-- SECTION : Recharger solde -->
 <section class="profile-card">
     <h3>Recharger mon solde</h3>
     <p>Votre solde actuel : <strong><?= format_money_eur($user['solde']) ?></strong></p>
     <a href="/src/pages/recharge.php" class="reservations-link">Recharger maintenant</a>
 </section>
 
-<!-- SECTION : Déconnexion -->
+
 <section class="profile-card">
     <h3>Se déconnecter</h3>
     <p>Cliquez sur le bouton ci-dessous pour vous déconnecter.</p>

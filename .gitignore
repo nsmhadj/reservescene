@@ -3,7 +3,7 @@
 
 # Composer
 /vendor/
-composer*
+composer.lock
 
 # IDE
 .vscode/

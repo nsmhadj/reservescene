@@ -6,22 +6,22 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://reservescene.alwaysdata.net/acceuil.php</loc>
+    <loc>https://reservescene.alwaysdata.net/index.php</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://reservescene.alwaysdata.net/recherche.php</loc>
+    <loc>https://reservescene.alwaysdata.net/src/pages/connexion.php</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://reservescene.alwaysdata.net/conditions.php</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <loc>https://reservescene.alwaysdata.net/src/pages/inscription.php</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://reservescene.alwaysdata.net/aidecontact.php</loc>
+    <loc>https://reservescene.alwaysdata.net/src/pages/aidecontact.php</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>

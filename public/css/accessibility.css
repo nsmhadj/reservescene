@@ -1,0 +1,83 @@
+
+.accessibility-menu {
+    position: relative;
+    margin-left: 20px;
+}
+
+#accessibility-toggle {
+    background: #eee;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+#accessibility-toggle:hover {
+    background: #ddd;
+}
+
+.accessibility-dropdown {
+    position: absolute;
+    top: 38px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 10px;
+    border-radius: 8px;
+    width: 180px;
+    display: none;
+    z-index: 999;
+}
+
+.accessibility-dropdown button {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    background: #f7f7f7;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.accessibility-dropdown button:hover {
+    background: #e8e8e8;
+}
+
+.accessibility-dropdown hr {
+    margin: 8px 0;
+}
+
+
+/* Mode contraste élevé */
+.contrast-mode {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* Police Dyslexie */
+.dyslexia-font {
+    font-family: 'OpenDyslexic', Arial, sans-serif !important;
+}
+
+/* Police via font-face */
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('/public/fonts/OpenDyslexic-Regular.otf') format('opentype');
+}
+
+/* Liens navigation */
+.header-nav .header-link {
+    font-size: 1rem;
+    margin-right: 15px;
+    white-space: nowrap;
+}
+
+
+@media (max-width: 768px) {
+    .header-nav .header-link {
+        font-size: 0.9rem;
+        margin-right: 10px;
+    }
+}

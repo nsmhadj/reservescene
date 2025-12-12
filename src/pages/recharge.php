@@ -1,32 +1,25 @@
 <?php
-// recharge.php : page de rechargement de solde pour l'utilisateur connecté
 
-// Démarrer la session et vérifier l'authentification
 session_start();
 if (empty($_SESSION['user'])) {
-    // Redirige vers la page de connexion avec redirection une fois connecté
+  
     header('Location: connexion.php?redirect=' . urlencode('recharge.php'));
     exit;
 }
 
-// Load database configuration
 require_once __DIR__ . '/../../config/database.php';
 
-// Fonction utilitaire pour l'échappement HTML (au cas où helpers.php n'est pas inclus)
 if (!function_exists('h')) {
     function h($s) {
         return htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 }
 
-// Fonction de formatage du montant en euro (si helpers.php n'est pas disponible)
 if (!function_exists('format_money_eur')) {
     function format_money_eur($montant) {
         return number_format((float)$montant, 2, ',', ' ') . ' €';
     }
 }
-
-// Gestion du formulaire de rechargement
 $rechargeMessage = '';
 $rechargeSuccess = false;
 
@@ -35,8 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['code_recharge'])) {
     if ($codeSaisi === '') {
         $rechargeMessage = 'Veuillez saisir un code.';
     } else {
-        // Rechercher le code correspondant par id_code ou par champ code
-        // On tente d'associer l'entrée aussi bien à l'identifiant numérique qu'à la chaîne enregistrée
+    
         $stmt = $pdo->prepare(
             "SELECT id_code, valeur, utiliser, code FROM code
              WHERE (id_code = :id_code) OR (code = :code_saisi)
@@ -123,6 +115,6 @@ include __DIR__ . '/../includes/header.php';
 </main>
 
 <?php include_once __DIR__ . '/../includes/footer.php'; ?>
-<script src="recharge.js"></script>
+<script src="/public/js/recharge.js"></script>
 </body>
 </html>

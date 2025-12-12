@@ -1,4 +1,4 @@
-// recherche.js
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const keyword = window.SEARCH_KEYWORD || new URLSearchParams(window.location.search).get("q");
@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
     titleElt.textContent = `Résultats de recherche "${keyword}"`;
   }
 
-  const apiUrl = `events.php?keyword=${encodeURIComponent(keyword)}`;
-  console.log("🌐 Appel API :", apiUrl);
+  const apiUrl = `/src/pages/events.php?keyword=${encodeURIComponent(keyword)}`;
+  console.log(" Appel API :", apiUrl);
 
   fetch(apiUrl)
     .then((res) => {
@@ -40,17 +40,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       allEvents = events;
 
-      // remplir le select villes selon les événements
+      
       populateCities(allEvents, citySelect);
 
-      // premier rendu : tout, trié par date
+      
       const initial = sortEvents(allEvents, currentSort);
       renderEvents(initial, cardsContainer);
 
-      // brancher les filtres
+      
       attachFilters(allEvents, cardsContainer);
 
-      // tri boutons
+      
       sortButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
           sortButtons.forEach((b) => b.classList.remove("active"));
@@ -123,7 +123,7 @@ function applyFiltersAndSort(events, sortMode = "dateAsc") {
   const wantsPMR = document.querySelector(".filter-access[value='pmr']")?.checked || false;
 
   let result = events.filter((ev) => {
-    // 1) Catégories
+    
     if (selectedCats.length) {
       const segment = ev?.classifications?.[0]?.segment?.name?.toLowerCase() || "";
       const genre = ev?.classifications?.[0]?.genre?.name?.toLowerCase() || "";
@@ -135,14 +135,14 @@ function applyFiltersAndSort(events, sortMode = "dateAsc") {
       if (!selectedCats.includes(evCat)) return false;
     }
 
-    // 2) Date
+    
     if (selectedDate !== "all") {
       const dateStr = ev?.dates?.start?.localDate;
       if (!dateStr) return false;
       if (!matchSingleDateFilter(dateStr, selectedDate)) return false;
     }
 
-    // 3) Ville
+    
     if (selectedCity !== "all") {
       const city =
         ev?._embedded?.venues?.[0]?.city?.name ||
@@ -152,7 +152,7 @@ function applyFiltersAndSort(events, sortMode = "dateAsc") {
       if (!city || city !== selectedCity) return false;
     }
 
-    // 4) Prix
+    
     if (selectedPrice !== "all") {
       const minPrice = ev?.priceRanges?.[0]?.min;
       if (!minPrice) return false;
@@ -161,9 +161,9 @@ function applyFiltersAndSort(events, sortMode = "dateAsc") {
       if (selectedPrice === "high" && !(minPrice > 50)) return false;
     }
 
-    // 5) Accessibilité (placeholder)
+    
     if (wantsPMR) {
-      // à compléter si ton API renvoie un champ d'accessibilité
+      
     }
 
     return true;
@@ -198,7 +198,7 @@ function matchSingleDateFilter(dateStr, filterValue) {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
 
-  const day = now.getDay(); // 0 dimanche
+  const day = now.getDay(); 
   const saturday = new Date(now);
   saturday.setDate(now.getDate() + ((6 - day + 7) % 7));
   const sunday = new Date(saturday);
@@ -223,7 +223,7 @@ function matchSingleDateFilter(dateStr, filterValue) {
   }
 }
 
-// 🔁 ICI la boucle modifiée pour aller vers resultat.php
+
 function renderEvents(events, container) {
   if (!container) return;
   container.innerHTML = "";
@@ -246,12 +246,12 @@ function renderEvents(events, container) {
     }
 
     const imageUrl = getPrimaryImage(event?.images);
-    const eventId = event?.id; // 👈 très important
+    const eventId = event?.id; 
 
     const card = document.createElement("article");
     card.className = "card";
 
-    // 👇 on enveloppe toute la carte dans un <a> vers resultat.php
+    
     card.innerHTML = `
       <a href="resultat.php?id=${encodeURIComponent(eventId)}" class="card-link">
         <div class="card-image">
